@@ -30,6 +30,12 @@ jobs:
       - name: Build Spritify API
         run: |
           dotnet build ./Spritify/Spritify.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: spritify-api-${GITHUB_SHA}
+          path: |
+            ./**/bin
   build-web:
     runs-on: ubuntu-latest
     env:
@@ -77,3 +83,10 @@ jobs:
       - name: Build Spritify.Web.Ui
         working-directory: ./web/Spritify.Web.Ui
         run: npm run build
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: spritify-web-${GITHUB_SHA}
+          path: |
+            ./**/bin
+            ./**/dist
