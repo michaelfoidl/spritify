@@ -33,7 +33,7 @@ jobs:
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: spritify-api-${GITHUB_SHA}
+          name: spritify-api-${{GITHUB_SHA}}
           path: |
             ./**/bin
   build-web:
@@ -86,7 +86,8 @@ jobs:
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: spritify-web-${GITHUB_SHA}
+          name: spritify-web-${{GITHUB_SHA}}
           path: |
             ./**/bin
             ./**/dist
+            !./**/node_modules
