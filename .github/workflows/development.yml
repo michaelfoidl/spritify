@@ -140,9 +140,7 @@ jobs:
           path: ${{ env.output-folder }}
   deploy:
     runs-on: ubuntu-latest
-    needs: |
-      publish-api
-      publish-web
+    needs: [ publish-api, publish-web ]
     env:
       api-package-folder: ~/.publish/api
       web-package-folder: ~/.publish/web
