@@ -67,6 +67,7 @@ jobs:
         working-directory: ./web/Spritify.Web.Ui
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: |
+          mkdir -p ${{ env.npm-cache }}
           cp ./package.json ${{ env.npm-cache }}/
           npm --prefix ${{ env.npm-cache }} install ${{ env.npm-cache }}
       - name: Copy npm Packages from Cache
