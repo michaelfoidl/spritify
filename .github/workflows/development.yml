@@ -51,7 +51,7 @@ jobs:
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
-          dotnet restore ./Spritify.Web/Spritif.Web.csproj
+          dotnet restore ./Spritify.Web/Spritify.Web.csproj
       - name: Restore npm Packages
         working-directory: ./web/Sprifify.Web.Ui
         if: steps.npm-cache.outputs.cache-hit != 'true'
