@@ -9,8 +9,8 @@ jobs:
   build-api:
     runs-on: ubuntu-latest
     env:
-      nuget-cache: ~/.nuget/packages
-      nuget-cache-version: 2
+      nuget-cache: ~/.nuget/packages/development/api
+      nuget-cache-version: 1
     defaults:
       run:
         working-directory: ./api
@@ -27,7 +27,7 @@ jobs:
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
-          dotnet restore ./Spritify/Spritify.csproj --packages ${{ env.nuget-cache }}
+          dotnet restore ./Spritify/Spritify.csproj --packages ${{ env.nuget-cache }} --no-dependencies
       - name: Archive nuget package cache
         uses: actions/upload-artifact@v2
         with:
@@ -39,9 +39,9 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     env:
-      nuget-cache: ~/.nuget/packages
-      nuget-cache-version: 2
-      npm-cache: ~/.npm/packages
+      nuget-cache: ~/.nuget/packages/development/web
+      nuget-cache-version: 1
+      npm-cache: ~/.npm/packages/development/web
       npm-cache-version: 1
     defaults:
       run:
