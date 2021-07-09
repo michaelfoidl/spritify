@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       nuget-cache: ~/.nuget/packages
+      nuget-cache-version: 1
     defaults:
       run:
         working-directory: ./api
@@ -22,7 +23,7 @@ jobs:
         id: nuget-cache
         with:
           path: ${{ env.nuget-cache }}
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          key: ${{ runner.os }}-nuget-v${{ env.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
@@ -34,7 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       nuget-cache: ~/.nuget/packages
+      nuget-cache-version: 1
       npm-cache: ~/.npm/packages
+      npm-cache-version: 1
     defaults:
       run:
         working-directory: ./web
@@ -50,12 +53,12 @@ jobs:
         id: nuget-cache
         with:
           path: ${{ env.nuget-cache }}
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          key: ${{ runner.os }}-nuget-v${{ env.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
       - uses: actions/cache@v2
         id: npm-cache
         with:
           path: ${{ env.npm-cache }}
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-npm-v${{ env.npm-cache-version }}-${{ hashFiles('**/package-lock.json') }}
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
