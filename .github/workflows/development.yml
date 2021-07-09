@@ -62,12 +62,12 @@ jobs:
         run: |
           dotnet restore ./Spritify.Web/Spritify.Web.csproj
       - name: Restore npm Packages
-        working-directory: ./web/Sprifify.Web.Ui
+        working-directory: ./Sprifify.Web.Ui
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm install
       - name: Build Spritify.Web
         run: |
           dotnet build ./Spritify.Web/Spritify.Web.csproj
       - name: Build Spritify.Web.Ui
-        working-directory: ./web/Sprifify.Web.Ui
+        working-directory: ./Sprifify.Web.Ui
         run: npm run build
