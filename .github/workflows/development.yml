@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       nuget-cache: ~/.nuget/packages
-      nuget-cache-version: 1
+      nuget-cache-version: 2
     defaults:
       run:
         working-directory: ./api
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       nuget-cache: ~/.nuget/packages
-      nuget-cache-version: 1
+      nuget-cache-version: 2
       npm-cache: ~/.npm/packages
       npm-cache-version: 1
     defaults:
@@ -75,16 +75,6 @@ jobs:
           mkdir -p ${{ env.npm-cache }}
           cp ./package.json ${{ env.npm-cache }}/
           npm --prefix ${{ env.npm-cache }} install ${{ env.npm-cache }}
-      - name: Archive nuget package cache
-        uses: actions/upload-artifact@v2
-        with:
-          name: nuget-package-cache-$GITHUB_SHA
-          path: ${{ env.nuget-cache }}
-      - name: Archive npm package cache
-        uses: actions/upload-artifact@v2
-        with:
-          name: npm-package-cache-$GITHUB_SHA
-          path: ${{ env.npm-cache }}
       - name: Copy npm Packages from Cache
         working-directory: ./web/Spritify.Web.Ui
         run: cp -r ${{ env.npm-cache }}/node_modules .
