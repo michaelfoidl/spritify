@@ -28,6 +28,11 @@ jobs:
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
           dotnet restore ./Spritify/Spritify.csproj --packages ${{ env.nuget-cache }}
+      - name: Archive nuget package cache
+        uses: actions/upload-artifact@v2
+        with:
+          name: nuget-package-cache-$GITHUB_SHA
+          path: ${{ env.nuget-cache }}
       - name: Build Spritify API
         run: |
           dotnet build ./Spritify/Spritify.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
@@ -70,6 +75,16 @@ jobs:
           mkdir -p ${{ env.npm-cache }}
           cp ./package.json ${{ env.npm-cache }}/
           npm --prefix ${{ env.npm-cache }} install ${{ env.npm-cache }}
+      - name: Archive nuget package cache
+        uses: actions/upload-artifact@v2
+        with:
+          name: nuget-package-cache-$GITHUB_SHA
+          path: ${{ env.nuget-cache }}
+      - name: Archive npm package cache
+        uses: actions/upload-artifact@v2
+        with:
+          name: npm-package-cache-$GITHUB_SHA
+          path: ${{ env.npm-cache }}
       - name: Copy npm Packages from Cache
         working-directory: ./web/Spritify.Web.Ui
         run: cp -r ${{ env.npm-cache }}/node_modules .
