@@ -8,52 +8,57 @@ on:
 jobs:
   build-api:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./api
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
         id: nuget-cache
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('./api/**/packages.lock.json') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
-          dotnet restore ./api/Spritify/Spritify.csproj
+          dotnet restore Spritify/Spritify.csproj
       - name: Build Spritify API
         run: |
-          dotnet build ./api/Spritify/Spritify.csproj
+          dotnet build Spritify/Spritify.csproj
   build-web:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./web
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
         id: nuget-cache
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('./web/**/packages.lock.json') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
       - uses: actions/cache@v2
         id: npm-cache
         with:
           path: ~/.npm/packages
-          key: ${{ runner.os }}-npm-${{ hashFiles('./web/**/package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
-        run: dotnet restore Spritify.sln
+        run: |
+          dotnet restore Spritify.Web/Spritif.Web.csproj
       - name: Restore npm Packages
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: |
-          cd ./web/Spritify.Web.UI
+          cd ./Spritify.Web.Ui
           npm install
       - name: Build Spritify.Web
         run: |
-          dotnet build ./web/Spritify.Web/Spritify.Web.csproj
+          dotnet build ./Spritify.Web/Spritify.Web.csproj
       - name: Build Spritify.Web.Ui
         run: |
-          cd ./web/Spritify.Web.Ui
+          cd ./Spritify.Web.Ui
           npm run build
