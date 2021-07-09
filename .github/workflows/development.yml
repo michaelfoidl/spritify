@@ -163,6 +163,6 @@ jobs:
       - name: Update known_hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Deploy Spritify API
-        run: rsync -avz ${{ api-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify/api
+        run: rsync -avz ${{ env.api-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify/api
       - name: Deploy Spritify Web
-        run: rsync -avz ${{ web-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify/web
+        run: rsync -avz ${{ env.web-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify/web
