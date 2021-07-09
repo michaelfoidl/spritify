@@ -8,6 +8,8 @@ on:
 jobs:
   build-api:
     runs-on: ubuntu-latest
+    env:
+      nuget-cache: ~/.nuget/packages
     defaults:
       run:
         working-directory: ./api
@@ -19,19 +21,20 @@ jobs:
       - uses: actions/cache@v2
         id: nuget-cache
         with:
-          path: ~/.nuget/packages
+          path: ${{ env.nuget-cache }}
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
-          dotnet restore ./Spritify/Spritify.csproj
+          dotnet restore ./Spritify/Spritify.csproj --packages ${{ env.nuget-cache }}
       - name: Build Spritify API
         run: |
-          dotnet build ./Spritify/Spritify.csproj
+          dotnet build ./Spritify/Spritify.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
   build-web:
     runs-on: ubuntu-latest
+    env:
+      nuget-cache: ~/.nuget/packages
+      npm-cache: ~/.npm/packages
     defaults:
       run:
         working-directory: ./web
@@ -46,28 +49,29 @@ jobs:
       - uses: actions/cache@v2
         id: nuget-cache
         with:
-          path: ~/.nuget/packages
+          path: ${{ env.nuget-cache }}
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
       - uses: actions/cache@v2
         id: npm-cache
         with:
-          path: ~/.npm/packages
+          path: ${{ env.npm-cache }}
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
-          dotnet restore ./Spritify.Web/Spritify.Web.csproj
+          dotnet restore ./Spritify.Web/Spritify.Web.csproj --packages ${{ env.nuget-cache }}
       - name: Restore npm Packages
         working-directory: ./web/Spritify.Web.Ui
         if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm install
+        run: |
+          cp ./package.json ${{ env.npm-cache }}
+          npm --prefix ${{ env.npm-cache }} install ${{ env.npm-cache }}
+      - name: Copy npm Packages from Cache
+        working-directory: ./web/Spritify.Web.Ui
+        run: cp -r ${{ env.npm-cache }}/node_modules .
       - name: Build Spritify.Web
         run: |
-          dotnet build ./Spritify.Web/Spritify.Web.csproj
+          dotnet build ./Spritify.Web/Spritify.Web.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
       - name: Build Spritify.Web.Ui
         working-directory: ./web/Spritify.Web.Ui
         run: npm run build
