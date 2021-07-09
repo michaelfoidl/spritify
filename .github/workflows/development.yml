@@ -28,11 +28,6 @@ jobs:
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
           dotnet restore ./Spritify/Spritify.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-      - name: Archive nuget package cache
-        uses: actions/upload-artifact@v2
-        with:
-          name: nuget-package-cache-$GITHUB_SHA
-          path: ${{ env.nuget-cache }}
       - name: Build Spritify API
         run: |
           dotnet build ./Spritify/Spritify.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
@@ -67,7 +62,7 @@ jobs:
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
-          dotnet restore ./Spritify.Web/Spritify.Web.csproj --packages ${{ env.nuget-cache }}
+          dotnet restore ./Spritify.Web/Spritify.Web.csproj --packages ${{ env.nuget-cache }} --no-dependencies
       - name: Restore npm Packages
         working-directory: ./web/Spritify.Web.Ui
         if: steps.npm-cache.outputs.cache-hit != 'true'
