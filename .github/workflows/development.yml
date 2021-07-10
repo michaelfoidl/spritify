@@ -168,7 +168,7 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_HOST_SIGNATURE }{" >> ~/.ssh/known_hosts
+          echo "${{ secrets.SSH_HOST_SIGNATURE }}" >> ~/.ssh/known_hosts
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github
           echo "IdentityFile ~/.ssh/github" >> ~/.ssh/config
           chmod -R 700 ~/.ssh  
