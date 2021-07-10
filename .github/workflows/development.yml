@@ -165,21 +165,14 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: spritify-web-${{ github.sha }}
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_HOST_SIGNATURE }{" >> ~/.ssh/known_hosts
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github
+          echo "IdentityFile ~/.ssh/github" >> ~/.ssh/config
+          chmod -R 700 ~/.ssh  
       - name: Deploy Spritify API
-        uses: burnett01/rsync-deployments@4.1
-        with:
-          switches: -avz
-          path: ${{ env.api-package-folder }}
-          remote_path: /var/www/staging/spritify/api
-          remote_host: ${{ secrets.SSH_HOST }}
-          remote_user: ${{ secrets.SSH_USER }}
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: rsync -avz -e ssh --delete ${{ env.api-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify/api
       - name: Deploy Spritify Web
-        uses: burnett01/rsync-deployments@4.1
-        with:
-          switches: -avz
-          path: ${{ env.web-package-folder }}
-          remote_path: /var/www/staging/spritify/web
-          remote_host: ${{ secrets.SSH_HOST }}
-          remote_user: ${{ secrets.SSH_USER }}
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: rsync -avz -e ssh --delete ${{ env.web-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify/web
