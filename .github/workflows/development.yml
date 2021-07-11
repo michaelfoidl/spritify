@@ -175,6 +175,6 @@ jobs:
           echo "IdentityFile ~/.ssh/github" >> ~/.ssh/config
           chmod -R 700 ~/.ssh  
       - name: Deploy Spritify API
-        run: rsync -avz -e ssh --delete ${{ env.api-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify/api
+        run: rsync -avz -e ssh --delete ${{ env.api-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify
       - name: Deploy Spritify Web
-        run: rsync -avz -e ssh --delete ${{ env.web-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify/web
+        run: rsync -avz -e ssh --delete ${{ env.web-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify
