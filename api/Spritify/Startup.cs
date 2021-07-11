@@ -9,6 +9,8 @@ namespace Spritify
 {
     public class Startup
     {
+        private const string PathBaseConfigurationKey = "PathBase";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -38,6 +40,8 @@ namespace Spritify
 
             app.UseHttpsRedirection();
 
+            app.UsePathBase(Configuration.GetValue(PathBaseConfigurationKey, ""));
+            
             app.UseRouting();
 
             app.UseAuthorization();
