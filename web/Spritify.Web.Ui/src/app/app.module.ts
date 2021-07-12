@@ -1,3 +1,4 @@
+import { APP_BASE_HREF } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -12,7 +13,10 @@ import { AppComponent } from './app.component';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+      // TODO improve this mess
+      { provide: APP_BASE_HREF, useValue: (window as any)["baseHref"] }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
