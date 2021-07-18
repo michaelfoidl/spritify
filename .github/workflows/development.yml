@@ -178,7 +178,9 @@ jobs:
         run: |
           rsync -avz -e ssh --delete ${{ env.api-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cp -r /var/www/staging/spritify/configuration/api/* /var/www/staging/spritify/api'
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '/var/www/staging/spritify/startup/api'
       - name: Deploy Spritify Web
         run: |
-		      rsync -avz -e ssh --delete ${{ env.web-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify
+          rsync -avz -e ssh --delete ${{ env.web-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cp -r /var/www/staging/spritify/configuration/web/* /var/www/staging/spritify/web'
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '/var/www/staging/spritify/startup/web'
