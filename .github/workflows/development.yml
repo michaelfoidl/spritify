@@ -25,14 +25,14 @@ jobs:
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
-          dotnet restore ./Spritify/Spritify.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./Spritify.Api/Spritify.Api.csproj --packages ${{ env.nuget-cache }} --no-dependencies
       - name: Restore Additional Nuget Package Infos
         if: steps.nuget-cache.outputs.cache-hit == 'true'
         run: |
-          dotnet restore ./Spritify/Spritify.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./Spritify.Api/Spritify.Api.csproj --packages ${{ env.nuget-cache }} --no-dependencies
       - name: Build Spritify API
         run: |
-          dotnet build ./Spritify/Spritify.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
+          dotnet build ./Spritify.Api/Spritify.Api.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -117,7 +117,7 @@ jobs:
           name: spritify-api-build-${{ github.sha }}
       - name: Publish Spritify API
         run: |
-          dotnet publish ./Spritify/Spritify.csproj --configuration Release --output ${{ env.output-folder }} --no-build
+          dotnet publish ./Spritify.Api/Spritify.Api.csproj --configuration Release --output ${{ env.output-folder }} --no-build
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:

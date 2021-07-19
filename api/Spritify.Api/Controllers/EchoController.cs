@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Spritify.Controllers
+namespace Spritify.Api.Controllers
 {
     [ApiController]
     [Route("/")]

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify", "api\Spritify\Spritify.csproj", "{C27F406E-2C02-4077-AF00-0F66F59806AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api", "api\Spritify.Api\Spritify.Api.csproj", "{C27F406E-2C02-4077-AF00-0F66F59806AF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{BEDB5A79-A1F3-411B-9DE0-BC7FB1AD135D}"
 EndProject
