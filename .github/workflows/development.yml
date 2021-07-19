@@ -26,13 +26,28 @@ jobs:
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
           dotnet restore ./Spritify.Api/Spritify.Api.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./common/Spritify.Api.Common/Spritify.Api.Common.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./common/Spritify.Api.Common.Interfaces/Spritify.Api.Common.Interfaces.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./core/Spritify.Api.Core/Spritify.Api.Core.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./core/Spritify.Api.Core.Interfaces/Spritify.Api.Core.Interfaces.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./core/Spritify.Api.Core.Entities/Spritify.Api.Core.Entities.csproj --packages ${{ env.nuget-cache }} --no-dependencies
       - name: Restore Additional Nuget Package Infos
         if: steps.nuget-cache.outputs.cache-hit == 'true'
         run: |
           dotnet restore ./Spritify.Api/Spritify.Api.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./common/Spritify.Api.Common/Spritify.Api.Common.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./common/Spritify.Api.Common.Interfaces/Spritify.Api.Common.Interfaces.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./core/Spritify.Api.Core/Spritify.Api.Core.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./core/Spritify.Api.Core.Interfaces/Spritify.Api.Core.Interfaces.csproj --packages ${{ env.nuget-cache }} --no-dependencies
+          dotnet restore ./core/Spritify.Api.Core.Entities/Spritify.Api.Core.Entities.csproj --packages ${{ env.nuget-cache }} --no-dependencies
       - name: Build Spritify API
         run: |
           dotnet build ./Spritify.Api/Spritify.Api.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
+          dotnet build ./common/Spritify.Api.Common/Spritify.Api.Common.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
+          dotnet build ./common/Spritify.Api.Common.Interfaces/Spritify.Api.Common.Interfaces.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
+          dotnet build ./core/Spritify.Api.Core/Spritify.Api.Core.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
+          dotnet build ./core/Spritify.Api.Core.Interfaces/Spritify.Api.Core.Interfaces.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
+          dotnet build ./core/Spritify.Api.Core.Entities/Spritify.Api.Core.Entities.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -118,6 +133,11 @@ jobs:
       - name: Publish Spritify API
         run: |
           dotnet publish ./Spritify.Api/Spritify.Api.csproj --configuration Release --output ${{ env.output-folder }} --no-build
+          dotnet publish ./common/Spritify.Api.Common/Spritify.Api.Common.csproj --configuration Release --output ${{ env.output-folder }} --no-build
+          dotnet publish ./common/Spritify.Api.Common.Interfaces/Spritify.Api.Common.Interfaces.csproj --configuration Release --output ${{ env.output-folder }} --no-build
+          dotnet publish ./core/Spritify.Api.Core/Spritify.Api.Core.csproj --configuration Release --output ${{ env.output-folder }} --no-build
+          dotnet publish ./core/Spritify.Api.Core.Interfaces/Spritify.Api.Core.Interfaces.csproj --configuration Release --output ${{ env.output-folder }} --no-build
+          dotnet publish ./core/Spritify.Api.Core.Entities/Spritify.Api.Core.Entities.csproj --configuration Release --output ${{ env.output-folder }} --no-build
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
