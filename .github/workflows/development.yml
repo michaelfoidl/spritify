@@ -9,8 +9,6 @@ jobs:
     env:
       nuget-cache: ~/.nuget/packages/development/common
       nuget-cache-version: 1
-      restore-params: --packages ${{ env.nuget-cache }} --no-dependencies
-      build-params: --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
     defaults:
       run:
         working-directory: ./common
@@ -27,14 +25,14 @@ jobs:
       - name: Restore Nuget Packages
         if: steps.nuget-cache.outputs.cache-hit != 'true'
         run: |
-          dotnet restore ./Spritify.Common/Spritify.Common.csproj ${{ env.restore-params }}
+          dotnet restore ./Spritify.Common/Spritify.Common.csproj --packages ${{ env.nuget-cache }} --no-dependencies
       - name: Restore Additional Nuget Package Infos
         if: steps.nuget-cache.outputs.cache-hit == 'true'
         run: |
-          dotnet restore ./Spritify.Common/Spritify.Common.csproj ${{ env.restore-params }}
+          dotnet restore ./Spritify.Common/Spritify.Common.csproj --packages ${{ env.nuget-cache }} --no-dependencies
       - name: Build Spritify Common
         run: |
-          dotnet build ./Spritify.Common/Spritify.Common.csproj ${{ env.build-params }}
+          dotnet build ./Spritify.Common/Spritify.Common.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
