@@ -37,4 +37,7 @@ runs:
       fi
   - name: Restore Nuget Packages
     shell: bash
-    run: ${{ inputs.project-path }} | xargs -I{} -n 1 echo 'dotnet restore ${{ github.workspace }}/{} --packages ${{ inputs.nuget-cache}} --no-dependencies'
+    run: |
+      echo 'Dummy Command Output Start'
+      ${{ inputs.project-path }} | xargs -I{} -n 1 echo 'dotnet restore ${{ github.workspace }}/{} --packages ${{ inputs.nuget-cache}} --no-dependencies'
+      echo 'Dummy Command Output End'
