@@ -20,9 +20,8 @@ jobs:
           dotnet-version: ${{ env.dotnet-version }}
       - uses: ./.github/actions/restoreNugetPackages
         with:
-          working-directory: ./common
           dotnet-version: ${{ env.dotnet-version }}
-          project-path: ./Spritify.Common/Spritify.Common.csproj
+          project-path: ./common/Spritify.Common/Spritify.Common.csproj
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
       - name: Build Spritify Common

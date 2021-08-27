@@ -1,15 +1,11 @@
 name: restoreNugetPackages
 description: 'Restores the nuget packages for the given project.'
 inputs:
-  working-directory:
-    description: 'The directory to be used as root for all paths'
-    required: false
-    default: '.'
   dotnet-version:
     description: '.NET Version to use'
     required: true
   project-path:
-    description: 'Path to the project file to restore'
+    description: 'Path to the project file to restore (the working-directory of parent actions is ignored)'
     required: true
   nuget-cache:
     description: 'Path to the directory where Nuget packages are stored'
@@ -33,8 +29,11 @@ runs:
   - name: Analyze Cache
     shell: bash
     run: |
-      if [ ${{ steps.nuget-cache.outputs.cache-hit }} == 'true' ] ; then
-      echo "cache ok"
+      if [ ${{ steps.nuget-cache.outputs.cache-hit }} == 'true' ];
+      then
+      echo "Cache OK - restoring package info only";
+      else
+      echo "Cache Not Found - restoring packages";
       fi
   - name: Restore Nuget Packages
     shell: bash
