@@ -8,7 +8,7 @@ inputs:
     description: 'Path to the project file to restore (the working-directory of parent actions is ignored)'
     required: true
   nuget-cache:
-    description: 'Path to the directory where Nuget packages are stored'
+    description: 'Path to the directory where Nuget packages are stored (absolute)'
     required: true
   nuget-cache-version:
     description: 'Version of the Nuget cache - changing the version allows cache invalidation without making changes to the source code'
@@ -37,4 +37,4 @@ runs:
       fi
   - name: Restore Nuget Packages
     shell: bash
-    run: ${{ inputs.project-path }} | xargs -L1 dotnet restore --packages ${{ inputs.nuget-cache}} --no-dependencies
+    run: ${{ inputs.project-path }} | xargs echo ${{ github.workspace }}/{} | xargs -L1 dotnet restore --packages ${{ inputs.nuget-cache}} --no-dependencies
