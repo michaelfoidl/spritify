@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.dotnet-version }}
-      - uses: ../.github/actions/restoreNugetPackages
+      - uses: ./.github/actions/restoreNugetPackages
         with:
           working-directory: ./common
           dotnet-version: ${{ env.dotnet-version }}
