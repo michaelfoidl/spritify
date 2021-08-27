@@ -35,95 +35,9 @@ jobs:
           path: |
             ./**/bin
             ./**/obj
-  build-workflow:
-    runs-on: ubuntu-latest
-    needs: build-common
-    env:
-      nuget-cache: ~/.nuget/packages/development/workflow
-      nuget-cache-version: 1
-      restore-params: --packages ${{ env.nuget-cache }} --no-dependencies
-      build-params: --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
-    defaults:
-      run:
-        working-directory: ./workflow
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
-      - uses: actions/cache@v2
-        id: nuget-cache
-        with:
-          path: ${{ env.nuget-cache }}
-          key: ${{ runner.os }}-nuget-v${{ env.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
-      - name: Restore Nuget Packages
-        if: steps.nuget-cache.outputs.cache-hit != 'true'
-        run: |
-          dotnet restore ./Spritify.Workflow/Spritify.Workflow.csproj ${{ env.restore-params }}
-      - name: Restore Additional Nuget Package Infos
-        if: steps.nuget-cache.outputs.cache-hit == 'true'
-        run: |
-          dotnet restore ./Spritify.Workflow/Spritify.Workflow.csproj ${{ env.restore-params }}
-      - name: Restore Spritify Common build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: spritify-common-build-${{ github.sha }}
-      - name: Build Spritify Workflow
-        run: |
-          dotnet build ./Spritify.Workflow/Spritify.Workflow.csproj ${{ env.build-params }}
-      - name: Archive build artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: spritify-workflow-build-${{ github.sha }}
-          path: |
-            ./**/bin
-            ./**/obj
-  build-workflow-test:
-    runs-on: ubuntu-latest
-    needs: build-workflow
-    env:
-      nuget-cache: ~/.nuget/packages/development/workflow-test
-      nuget-cache-version: 1
-      restore-params: --packages ${{ env.nuget-cache }} --no-dependencies
-      build-params: --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
-    defaults:
-      run:
-        working-directory: ./workflow
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
-      - uses: actions/cache@v2
-        id: nuget-cache
-        with:
-          path: ${{ env.nuget-cache }}
-          key: ${{ runner.os }}-nuget-v${{ env.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
-      - name: Restore build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: spritify-workflow-build-${{ github.sha }}
-      - name: Restore Nuget Packages
-        if: steps.nuget-cache.outputs.cache-hit != 'true'
-        run: |
-          dotnet restore ./Spritify.Workflow.Test/Spritify.Workflow.Test.csproj ${{ env.restore-params }}
-      - name: Restore Additional Nuget Package Infos
-        if: steps.nuget-cache.outputs.cache-hit == 'true'
-        run: |
-          dotnet restore ./Spritify.Workflow.Test/Spritify.Workflow.Test.csproj ${{ env.restore-params }}
-      - name: Build Spritify Workflow
-        run: |
-          dotnet build ./Spritify.Workflow.Test/Spritify.Workflow.Test.csproj ${{ env.build-params }}
-      - name: Archive build artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: spritify-workflow-test-build-${{ github.sha }}
-          path: |
-            ./**/bin
-            ./**/obj
   build-api:
     runs-on: ubuntu-latest
-    needs: [ build-common, build-workflow ]
+    needs: build-common
     env:
       nuget-cache: ~/.nuget/packages/development/api
       nuget-cache-version: 1
@@ -243,35 +157,9 @@ jobs:
             ./**/obj
             ./**/dist
             !./**/node_modules
-  test-workflow:
-    runs-on: ubuntu-latest
-    needs: build-workflow-test
-    env:
-      output-folder: ~/.test/workflow
-      test-params: --configuration Release --no-build --verbosity normal --results-directory ${{ env.output-folder }}
-    defaults:
-      run:
-        working-directory: ./workflow
-    steps:
-      - uses: actions/checkout@v2
-      - name: Restore build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: spritify-workflow-build-${{ github.sha }}
-      - name: Unit-test Spritify Workflow
-        run: |
-          dotnet test ./Spritify.Workflow.Test/Spritify.Workflow.Test.csproj --filter TestCategory=UnitTest --logger "html;LogFileName=Spritify.Workflow.Test.html" ${{ env.test-params }}
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: spritify-workflow-test-${{ github.sha }}
-          path: ${{ env.output-folder }}
-  test-api: 
-    runs-on: ubuntu-latest
-    needs: test-workflow
   publish-api:
     runs-on: ubuntu-latest
-    needs: [ build-api, test-api ]
+    needs: build-api
     env:
       output-folder: ~/.publish/api
     defaults:
