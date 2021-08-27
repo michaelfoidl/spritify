@@ -31,9 +31,11 @@ runs:
       path: ${{ inputs.nuget-cache }}
       key: ${{ runner.os }}-nuget-v${{ inputs.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
   - name: Analyze Cache
+    shell: bash
     run: |
       if [ ${{ steps.nuget-cache.outputs.cache-hit }} == 'true' ] ; then
       echo "cache ok"
       fi
   - name: Restore Nuget Packages
+    shell: bash
     run: ${{ inputs.project-path }} | xargs -L1 dotnet restore --packages ${{ inputs.nuget-cache}} --no-dependencies
