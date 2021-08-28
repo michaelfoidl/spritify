@@ -55,7 +55,6 @@ runs:
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
       echo "::group::Nuget Restore"
-      dotnet --info
       chmod +x ${{ github.action_path }}/restore.sh
       ${{ env.projects }} | xargs -I{} ${{ github.action_path }}/restore.sh {} ${{ inputs.nuget-cache }}
       echo "::endgroup::"
