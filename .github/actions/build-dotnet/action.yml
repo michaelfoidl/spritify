@@ -1,0 +1,69 @@
+name: build-dotnet
+description: 'Restores the nuget packages for the given project.'
+inputs:
+  dotnet-version:
+    description: '.NET Version to use'
+    required: true
+  root-directory:
+    description: 'Path to the root directory of the project - all projects inside this directory are built'
+    required: true
+  nuget-cache:
+    description: 'Path to the directory where Nuget packages are stored (absolute)'
+    required: true
+  nuget-cache-version:
+    description: 'Version of the Nuget cache - changing the version allows cache invalidation without making changes to the source code'
+    required: false
+    default: 1
+  artifact-name:
+    description: 'Name of the build artifact'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+  - name: Checkout latest version
+    uses: actions/checkout@v2
+  - name: Setup .NET
+    uses: actions/setup-dotnet@v1
+    with:
+      dotnet-version: ${{ inputs.dotnet-version }}
+  - name: Find projects to build
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
+    run: |
+      export PROJECTS
+      find -type f -name '*.csproj' > $PROJECTS
+      echo '::set-env name=PROJECTS::$PROJECTS'
+      echo $PROJECTS | wc -l | xargs printf 'Found %s projects'
+  - name: Look for cached dependencies
+    uses: actions/cache@v2
+    id: nuget-cache
+    with:
+      path: ${{ inputs.nuget-cache }}
+      key: ${{ runner.os }}-nuget-v${{ inputs.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
+  - name: Analyze Cache
+    shell: bash
+    run: |
+      if [ ${{ steps.nuget-cache.outputs.cache-hit }} == 'true' ];
+      then
+      echo "Cache OK - restoring package info only";
+      else
+      echo "No Cache found - restoring packages";
+      fi
+  - name: Restore Nuget Packages
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
+    run: |
+      echo 'Dummy Command Output Start'
+      $PROJECTS | xargs -I{} dotnet restore {} --packages ${{ inputs.nuget-cache}} --no-dependencies'
+      echo 'Dummy Command Output End'
+  - name: Build
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
+    run: $PROJECTS | xargs -I{} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ inputs.nuget-cache }}
+  - name: Archive artifacts
+    uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: |
+          ${{ github.workspace }}/**/bin
+          ${{ github.workspace }}/**/obj
