@@ -28,7 +28,7 @@ runs:
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
-      echo 'Find projects to build\n'
+      echo 'Find projects to build'
       PROJECTS=$(find . -type f -name '*.csproj')
       echo $PROJECTS | wc -l | xargs printf 'Found %s projects'
       echo 'projects=$PROJECTS' >> $GITHUB_ENV
@@ -44,9 +44,9 @@ runs:
       echo '::group::Analyze Cache'
       if [ ${{ steps.nuget-cache.outputs.cache-hit }} == 'true' ];
       then
-      echo 'Cache OK - restoring package info only\n';
+      echo 'Cache OK - restoring package info only';
       else
-      echo 'No Cache found - restoring packages\n';
+      echo 'No Cache found - restoring packages';
       fi
       echo '::endgroup::'
   - name: Nuget Restore
@@ -54,6 +54,8 @@ runs:
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
       echo '::group::Nuget Restore'
+      echo 'projects:'
+      echo ${{ env.projects }}
       ${{ env.projects }} | xargs -I{} dotnet restore {} --packages ${{ inputs.nuget-cache}} --no-dependencies
       echo '::endgroup::'
   - name: Build
