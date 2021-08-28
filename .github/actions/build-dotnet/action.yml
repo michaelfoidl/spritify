@@ -28,10 +28,9 @@ runs:
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
-      export PROJECTS
-      find -type f -name '*.csproj' > $PROJECTS
-      echo '::set-env name=PROJECTS::$PROJECTS'
+      PROJECTS=$(find . -type f -name '*.csproj')
       echo $PROJECTS | wc -l | xargs printf 'Found %s projects'
+      echo '::set-env name=BUILD_TARGETS::$PROJECTS'
   - name: Look for cached dependencies
     uses: actions/cache@v2
     id: nuget-cache
@@ -50,11 +49,11 @@ runs:
   - name: Restore Nuget Packages
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
-    run: $PROJECTS | xargs -I{} dotnet restore {} --packages ${{ inputs.nuget-cache}} --no-dependencies
+    run: $BUILD_TARGETS | xargs -I{} dotnet restore {} --packages ${{ inputs.nuget-cache}} --no-dependencies
   - name: Build
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
-    run: $PROJECTS | xargs -I{} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ inputs.nuget-cache }}
+    run: $BUILD_TARGETS | xargs -I{} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ inputs.nuget-cache }}
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
     with:
