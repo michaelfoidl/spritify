@@ -20,8 +20,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-  - name: Checkout latest version
-    uses: actions/checkout@v2
   - name: Setup .NET
     uses: actions/setup-dotnet@v1
     with:
@@ -45,25 +43,22 @@ runs:
     run: |
       if [ ${{ steps.nuget-cache.outputs.cache-hit }} == 'true' ];
       then
-      echo "Cache OK - restoring package info only";
+      echo 'Cache OK - restoring package info only';
       else
-      echo "No Cache found - restoring packages";
+      echo 'No Cache found - restoring packages';
       fi
   - name: Restore Nuget Packages
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
-    run: |
-      echo 'Dummy Command Output Start'
-      $PROJECTS | xargs -I{} dotnet restore {} --packages ${{ inputs.nuget-cache}} --no-dependencies'
-      echo 'Dummy Command Output End'
+    run: $PROJECTS | xargs -I{} dotnet restore {} --packages ${{ inputs.nuget-cache}} --no-dependencies
   - name: Build
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: $PROJECTS | xargs -I{} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ inputs.nuget-cache }}
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
-      with:
-        name: ${{ inputs.artifact-name }}
-        path: |
-          ${{ github.workspace }}/**/bin
-          ${{ github.workspace }}/**/obj
+    with:
+      name: ${{ inputs.artifact-name }}
+      path: |
+        ${{ github.workspace }}/**/bin
+        ${{ github.workspace }}/**/obj
