@@ -53,7 +53,7 @@ runs:
   - name: Restore Permissions
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
-    run: ${{ env.projects }} | xargs chmod -R 757 
+    run: ${{ env.projects }} | xargs -I{} chmod -R 757 {}
   - name: Nuget Restore
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
