@@ -50,6 +50,10 @@ runs:
       echo "No Cache found - restoring packages";
       fi
       echo "::endgroup::"
+  - name: Restore Permissions
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
+    run: ${{ env.projects }} | xargs chmod -R 757 
   - name: Nuget Restore
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
