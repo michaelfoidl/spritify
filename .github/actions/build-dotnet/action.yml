@@ -38,7 +38,7 @@ runs:
     id: nuget-cache
     with:
       path: ${{ inputs.nuget-cache }}
-      key: ${{ runner.os }}-nuget-v${{ inputs.nuget-cache-version }}-${{ hashFiles("**/packages.lock.json") }}
+      key: ${{ runner.os }}-nuget-v${{ inputs.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
   - name: Analyze Cache
     shell: bash
     run: |
