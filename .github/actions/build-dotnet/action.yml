@@ -20,6 +20,8 @@ inputs:
 runs:
   using: 'composite'
   steps:
+  - name: Checkout latest version
+    uses: actions/checkout@v2
   - name: Setup .NET
     uses: actions/setup-dotnet@v1
     with:
@@ -55,7 +57,7 @@ runs:
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
       echo "::group::Restore Permissions"
-      ${{ env.projects }} | xargs -I{} chmod -R 777 {}
+      chmod -R 777 ${{ env.projects }}
       ${{ env.projects }} | xargs -I{} ls {}/../ -al | xargs echo
       echo "::endgroup::"
   - name: Nuget Restore
