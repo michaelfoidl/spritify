@@ -32,7 +32,8 @@ runs:
     run: |
       echo "::group::Find projects to build"
       PROJECTS=$(find . -type f -name "*.csproj")
-      echo $PROJECTS | wc -l | xargs printf "Found %s project(s)"
+      echo $PROJECTS | wc -l | printf "Found %s project(s)"
+      echo ""
       echo "projects=$PROJECTS" >> $GITHUB_ENV
       echo "::endgroup::"
   - name: Look for cached dependencies
@@ -57,7 +58,9 @@ runs:
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
       echo "::group::Restore Permissions"
-      chmod -R 777 ./Spritify.Common/Spritify.Common.csproj
+      echo ${{ env.projects }}
+      echo "END"
+      ${{ env.projects }} | xargs -I{} chmod -R 777 {}
       echo "::endgroup::"
   - name: Nuget Restore
     shell: bash
