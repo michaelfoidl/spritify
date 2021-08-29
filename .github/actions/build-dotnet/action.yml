@@ -60,7 +60,7 @@ runs:
       echo "::group::Restore Permissions"
       echo ${{ env.projects }}
       echo "END"
-      ${{ env.projects }} | xargs -I{} chmod -R 777 {}
+      ${{ env.projects }} | xargs -0 -I{} chmod -R 777 {}
       echo "::endgroup::"
   - name: Nuget Restore
     shell: bash
