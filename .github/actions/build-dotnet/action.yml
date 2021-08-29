@@ -57,8 +57,7 @@ runs:
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
       echo "::group::Restore Permissions"
-      chmod -R 777 ${{ env.projects }}
-      ${{ env.projects }} | xargs -I{} ls {}/../ -al | xargs echo
+      chmod -R 777 ./Spritify.Common/Spritify.Common.csproj
       echo "::endgroup::"
   - name: Nuget Restore
     shell: bash
