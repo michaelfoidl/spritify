@@ -32,7 +32,7 @@ runs:
     run: |
       echo "::group::Find projects to build"
       PROJECTS=$(find . -type f -name "*.csproj")
-      echo $PROJECTS | wc -l | printf "Found %s project(s)"
+      echo $PROJECTS | wc -l | xargs printf "Found %s project(s)"
       echo ""
       echo "projects=$PROJECTS" >> $GITHUB_ENV
       echo "::endgroup::"
