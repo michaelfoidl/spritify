@@ -40,7 +40,7 @@ runs:
     working-directory: ${{ github.workspace }}/${{ env.root-directory }}
     run: |
       echo "::group::Find projects to build"
-      PROJECTS=$(find . -type f -name "*.csproj" | tr "\n" "")
+      PROJECTS=$(find . -type f -name "*.csproj" | tr -d "\n")
       echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
       echo "projects='$PROJECTS'" >> $GITHUB_ENV
       echo "::endgroup::"
