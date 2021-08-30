@@ -31,8 +31,8 @@ runs:
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
       echo "::group::Find projects to build"
-      PROJECTS=$(find . -type f -name "*.csproj" -print0)
-      echo $PROJECTS | wc -l | xargs printf "Found %s project(s)"
+      PROJECTS=$(find . -type f -name "*.csproj")
+      echo $PROJECTS | wc -w | xargs printf "Found %s project(s)"
       echo ""
       echo "projects=$PROJECTS" >> $GITHUB_ENV
       echo "::endgroup::"
@@ -53,35 +53,24 @@ runs:
       echo "No Cache found - restoring packages";
       fi
       echo "::endgroup::"
-  - name: Restore Permissions
-    shell: bash
-    working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
-    run: |
-      echo "::group::Restore Permissions"
-      echo ${{ env.projects }}
-      echo "END"
-      ${{ env.projects }} | xargs -0 -I{} chmod -R 777 {}
-      echo "::endgroup::"
   - name: Nuget Restore
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
       echo "::group::Nuget Restore"
-      chmod +x ${{ github.action_path }}/restore.sh
-      ${{ env.projects }} | xargs -I{} ${{ github.action_path }}/restore.sh {} ${{ inputs.nuget-cache }}
+      echo ${{ env.projects }} | tr " " "\n" | xargs -I {} dotnet restore {} --packages ${{ inputs.nuget-cache }} --no-dependencies
       echo "::endgroup::"
   - name: Build
     shell: bash
     working-directory: ${{ github.workspace }}/${{ inputs.root-directory }}
     run: |
       echo "::group::Build"
-      chmod +x ${{ github.action_path }}/build.sh
-      ${{ env.projects }} | xargs -I{} ${{ github.action_path }}/build.sh {} ${{ inputs.nuget-cache }}
+      echo ${{ env.projects }} | tr " " "\n" | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ inputs.nuget-cache }}
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
     with:
       name: ${{ inputs.artifact-name }}
       path: |
-        ${{ github.workspace }}/**/bin
-        ${{ github.workspace }}/**/obj
+        ${{ github.workspace }}/**/${{ inputs.root-directory }}/**/bin
+        ${{ github.workspace }}/**/${{ inputs.root-directory }}/**/obj
