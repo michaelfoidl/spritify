@@ -40,11 +40,9 @@ runs:
     working-directory: ${{ github.workspace }}/${{ env.root-directory }}
     run: |
       echo "::group::Find projects to build"
-      PROJECTS=$(find . -type f -name "*.csproj")
+      PROJECTS=$(find . -type f -name "*.csproj" | tr "\n" "")
       echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
-      echo "projects<<EOF" >> $GITHUB_ENV
-      echo $PROJECTS >> $GITHUB_ENV
-      echo EOF >> $GITHUB_ENV
+      echo "projects='$PROJECTS'" >> $GITHUB_ENV
       echo "::endgroup::"
   - name: Look for cached dependencies
     uses: actions/cache@v2
