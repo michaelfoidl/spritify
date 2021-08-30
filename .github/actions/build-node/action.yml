@@ -2,7 +2,7 @@ name: build-node
 description: 'Builds the given Node.js project(s).'
 inputs:
   node-version:
-    description: '.NET Version to use'
+    description: 'Node.js Version to use'
     required: true
   root-directory:
     description: 'Path to the root directory of the project - all projects inside this directory are built'
@@ -32,9 +32,9 @@ runs:
       echo "Finished successfully."
       echo "::endgroup::"
   - name: Setup Node.js
-    - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.node-version }}
+    uses: actions/setup-node@v2
+    with:
+      node-version: ${{ env.node-version }}
   - name: Find projects to build
     shell: bash
     working-directory: ${{ github.workspace }}/${{ env.root-directory }}
@@ -42,7 +42,7 @@ runs:
       echo "::group::Find projects to build"
       PROJECTS=$(find . -type f -name "package.json")
       echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
-      echo $PROJECTS | tr " " "\n" | xargs -I {} echo "projects={}" >> $GITHUB_ENV
+      echo "projects=$PROJECTS" >> $GITHUB_ENV
       echo "::endgroup::"
   - name: Look for cached dependencies
     uses: actions/cache@v2
