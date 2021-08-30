@@ -11,8 +11,10 @@ jobs:
       nuget-cache: ~/.nuget/packages/development/common
       nuget-cache-version: 1
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/build-dotnet
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.Common
+        uses: ./.github/actions/build-dotnet
         with:
           dotnet-version: ${{ env.dotnet-version }}
           root-directory: ./common
@@ -23,124 +25,57 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-common
     env:
+      dotnet-version: '5.0.x'
       nuget-cache: ~/.nuget/packages/development/api
       nuget-cache-version: 1
-    defaults:
-      run:
-        working-directory: ./api
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
-      - uses: actions/cache@v2
-        id: nuget-cache
-        with:
-          path: ${{ env.nuget-cache }}
-          key: ${{ runner.os }}-nuget-v${{ env.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
-      - name: Restore Nuget Packages
-        if: steps.nuget-cache.outputs.cache-hit != 'true'
-        run: |
-          dotnet restore ./Spritify.Api/Spritify.Api.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./common/Spritify.Api.Common/Spritify.Api.Common.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./common/Spritify.Api.Common.Interfaces/Spritify.Api.Common.Interfaces.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./core/Spritify.Api.Core/Spritify.Api.Core.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./core/Spritify.Api.Core.Interfaces/Spritify.Api.Core.Interfaces.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./core/Spritify.Api.Core.Entities/Spritify.Api.Core.Entities.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-      - name: Restore Additional Nuget Package Infos
-        if: steps.nuget-cache.outputs.cache-hit == 'true'
-        run: |
-          dotnet restore ./Spritify.Api/Spritify.Api.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./common/Spritify.Api.Common/Spritify.Api.Common.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./common/Spritify.Api.Common.Interfaces/Spritify.Api.Common.Interfaces.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./core/Spritify.Api.Core/Spritify.Api.Core.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./core/Spritify.Api.Core.Interfaces/Spritify.Api.Core.Interfaces.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-          dotnet restore ./core/Spritify.Api.Core.Entities/Spritify.Api.Core.Entities.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-      - name: Restore Spritify Common build artifacts
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Restore Spritify.Common build artifacts
         uses: actions/download-artifact@v2
         with:
           name: spritify-common-build-${{ github.sha }}
-      - name: Build Spritify API
-        run: |
-          dotnet build ./Spritify.Api/Spritify.Api.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
-          dotnet build ./common/Spritify.Api.Common/Spritify.Api.Common.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
-          dotnet build ./common/Spritify.Api.Common.Interfaces/Spritify.Api.Common.Interfaces.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
-          dotnet build ./core/Spritify.Api.Core/Spritify.Api.Core.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
-          dotnet build ./core/Spritify.Api.Core.Interfaces/Spritify.Api.Core.Interfaces.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
-          dotnet build ./core/Spritify.Api.Core.Entities/Spritify.Api.Core.Entities.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
-      - name: Archive build artifacts
-        uses: actions/upload-artifact@v2
+      - name: Build Spritify.Api
+        uses: ./.github/actions/build-dotnet
         with:
-          name: spritify-api-build-${{ github.sha }}
-          path: |
-            ./**/bin
-            ./**/obj
+          dotnet-version: ${{ env.dotnet-version }}
+          root-directory: ./api
+          nuget-cache: ${{ env.nuget-cache }}
+          nuget-cache-version: ${{ env.nuget-cache-version }}
+          artifact-name: spritify-api-build-${{ github.sha }}
   build-web:
     runs-on: ubuntu-latest
     needs: build-common
     env:
+      dotnet-version: '5.0.x'
       nuget-cache: ~/.nuget/packages/development/web
       nuget-cache-version: 1
+      node-version: '14.17.x'
       npm-cache: ~/.npm/packages/development/web
       npm-cache-version: 1
-    defaults:
-      run:
-        working-directory: ./web
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '5.0.x'
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14.17.x'
-      - uses: actions/cache@v2
-        id: nuget-cache
-        with:
-          path: ${{ env.nuget-cache }}
-          key: ${{ runner.os }}-nuget-v${{ env.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
-      - uses: actions/cache@v2
-        id: npm-cache
-        with:
-          path: ${{ env.npm-cache }}
-          key: ${{ runner.os }}-npm-v${{ env.npm-cache-version }}-${{ hashFiles('**/package-lock.json') }}
-      - name: Restore Nuget Packages
-        if: steps.nuget-cache.outputs.cache-hit != 'true'
-        run: |
-          dotnet restore ./Spritify.Web/Spritify.Web.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-      - name: Restore Additional Nuget Package Infos
-        if: steps.nuget-cache.outputs.cache-hit == 'true'
-        run: |
-          dotnet restore ./Spritify.Web/Spritify.Web.csproj --packages ${{ env.nuget-cache }} --no-dependencies
-      - name: Restore npm Packages
-        working-directory: ./web/Spritify.Web.Ui
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p ${{ env.npm-cache }}
-          cp ./package.json ${{ env.npm-cache }}/
-          npm --prefix ${{ env.npm-cache }} install ${{ env.npm-cache }}
-      - name: Copy npm Packages from Cache
-        working-directory: ./web/Spritify.Web.Ui
-        run: cp -r ${{ env.npm-cache }}/node_modules .
-      - name: Restore Spritify Common build artifacts
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Restore Spritify.Common build artifacts
         uses: actions/download-artifact@v2
         with:
           name: spritify-common-build-${{ github.sha }}
-      - name: Build Spritify Web
-        run: |
-          dotnet build ./Spritify.Web/Spritify.Web.csproj --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
-      - name: Build Spritify Web UI
-        working-directory: ./web/Spritify.Web.Ui
-        run: npm run build
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+      - name: Build Spritify.Web (1/2)
+        uses: ./.github/actions/build-dotnet
         with:
-          name: spritify-web-build-${{ github.sha }}
-          path: |
-            ./**/bin
-            ./**/obj
-            ./**/dist
-            !./**/node_modules
+          dotnet-version: ${{ env.dotnet-version }}
+          root-directory: ./web
+          nuget-cache: ${{ env.nuget-cache }}
+          nuget-cache-version: ${{ env.nuget-cache-version }}
+          artifact-name: spritify-web-build-${{ github.sha }}
+      - name: Build Spritify.Web (2/2)
+        uses: ./.github/actions/build-node
+        with:
+          node-version: ${{ env.node-version }}
+          root-directory: ./web
+          npm-cache: ${{ env.npm-cache }}
+          npm-cache-version: ${{ env.npm-cache-version }}
+          artifact-name: spritify-web-build-${{ github.sha }}
   publish-api:
     runs-on: ubuntu-latest
     needs: build-api

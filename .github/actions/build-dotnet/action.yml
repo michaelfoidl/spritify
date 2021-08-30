@@ -1,5 +1,5 @@
 name: build-dotnet
-description: 'Restores the nuget packages for the given project.'
+description: 'Builds the given .NET project(s).'
 inputs:
   dotnet-version:
     description: '.NET Version to use'
@@ -31,8 +31,6 @@ runs:
       echo "artifact-name=${{ inputs.artifact-name }}" >> $GITHUB_ENV
       echo "Finished successfully."
       echo "::endgroup::"
-  - name: Checkout latest version
-    uses: actions/checkout@v2
   - name: Setup .NET
     uses: actions/setup-dotnet@v1
     with:

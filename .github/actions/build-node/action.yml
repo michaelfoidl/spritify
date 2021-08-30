@@ -1,0 +1,91 @@
+name: build-node
+description: 'Builds the given Node.js project(s).'
+inputs:
+  node-version:
+    description: '.NET Version to use'
+    required: true
+  root-directory:
+    description: 'Path to the root directory of the project - all projects inside this directory are built'
+    required: true
+  npm-cache:
+    description: 'Path to the directory where npm packages are stored (absolute)'
+    required: true
+  npm-cache-version:
+    description: 'Version of the npm cache - changing the version allows cache invalidation without making changes to the source code'
+    required: false
+    default: '1'
+  artifact-name:
+    description: 'Name of the build artifact'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+  - name: Process input parameters
+    shell: bash
+    run: |
+      echo "::group::Process input parameters"
+      echo "node-version=${{ inputs.dotnet-version }}" >> $GITHUB_ENV
+      echo ${{ inputs.root-directory }} | tr -d "./" | xargs -I {} echo "root-directory={}" >> $GITHUB_ENV
+      echo "npm-cache=${{ inputs.npm-cache }}" >> $GITHUB_ENV
+      echo "npm-cache-version=${{ inputs.npm-cache-version }}" >> $GITHUB_ENV
+      echo "artifact-name=${{ inputs.artifact-name }}" >> $GITHUB_ENV
+      echo "Finished successfully."
+      echo "::endgroup::"
+  - name: Setup Node.js
+    - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.node-version }}
+  - name: Find projects to build
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ env.root-directory }}
+    run: |
+      echo "::group::Find projects to build"
+      PROJECTS=$(find . -type f -name "package.json")
+      echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
+      echo $PROJECTS | tr " " "\n" | xargs -I {} echo "projects={}" >> $GITHUB_ENV
+      echo "::endgroup::"
+  - name: Look for cached dependencies
+    uses: actions/cache@v2
+    id: npm-cache
+    with:
+      path: ${{ env.npm-cache }}
+      key: ${{ runner.os }}-npm-v${{ env.npm-cache-version }}-${{ hashFiles('**/package-lock.json') }}
+  - name: Analyze Cache
+    shell: bash
+    run: |
+      echo "::group::Analyze Cache"
+      if [ ${{ steps.npm-cache.outputs.cache-hit }} == "true" ];
+      then
+      echo "Cache OK - copying packages only";
+      else
+      echo "No Cache found - restoring packages";
+      fi
+      echo "::endgroup::"
+  - name: Collect packages
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ env.root-directory }}
+    run: |
+      echo "::group::Collect packages"
+      if [ ${{ steps.npm-cache.outputs.cache-hit }} != "true" ];
+      then
+      mkdir -p ${{ env.npm-cache }}
+      echo ${{ env.projects }} | xargs -I {} cp {} ${{ env.npm-cache }}/{}
+      echo ${{ env.projects }} | tr "package.json" "" | xargs -I {} npm --prefix ${{ env.npm-cache }}/{} install ${{ env.npm-cache }}/{}
+      fi
+      echo ${{ env.projects }} | tr "package.json" "" | xargs -I {} cp -r ${{ env.npm-cache }}/{}/node_modules {}
+      echo "Packages collected successfully."
+      echo "::endgroup::"
+  - name: Build
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ env.root-directory }}
+    run: |
+      echo "::group::Build"
+      echo ${{ env.projects }} | tr "package.json" "" | xargs -I {} npm --prefix {} run build
+      echo "::endgroup::"
+  - name: Archive artifacts
+    uses: actions/upload-artifact@v2
+    with:
+      name: ${{ env.artifact-name }}
+      path: |
+        ${{ github.workspace }}/**/${{ env.root-directory }}/**/dist
+        !${{ github.workspace }}/**/${{ env.root-directory }}/**/node_modules
