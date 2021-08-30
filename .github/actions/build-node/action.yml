@@ -24,7 +24,7 @@ runs:
     shell: bash
     run: |
       echo "::group::Process input parameters"
-      echo "node-version=${{ inputs.dotnet-version }}" >> $GITHUB_ENV
+      echo "node-version=${{ inputs.node-version }}" >> $GITHUB_ENV
       echo ${{ inputs.root-directory }} | tr -d "./" | xargs -I {} echo "root-directory={}" >> $GITHUB_ENV
       echo "npm-cache=${{ inputs.npm-cache }}" >> $GITHUB_ENV
       echo "npm-cache-version=${{ inputs.npm-cache-version }}" >> $GITHUB_ENV
