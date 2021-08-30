@@ -42,7 +42,9 @@ runs:
       echo "::group::Find projects to build"
       PROJECTS=$(find . -type f -name "package.json")
       echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
-      echo "projects=$PROJECTS" >> $GITHUB_ENV
+      echo "projects<<EOF" >> $GITHUB_ENV
+      echo $PROJECTS >> $GITHUB_ENV
+      echo EOF >> $GITHUB_ENV
       echo "::endgroup::"
   - name: Look for cached dependencies
     uses: actions/cache@v2
@@ -70,9 +72,9 @@ runs:
       then
       mkdir -p ${{ env.npm-cache }}
       echo ${{ env.projects }} | xargs -I {} cp {} ${{ env.npm-cache }}/{}
-      echo ${{ env.projects }} | tr -d "package.json" | xargs -I {} npm --prefix ${{ env.npm-cache }}/{} install ${{ env.npm-cache }}/{}
+      echo ${{ env.projects }} | sed "s/package.json//" | xargs -I {} npm --prefix ${{ env.npm-cache }}/{} install ${{ env.npm-cache }}/{}
       fi
-      echo ${{ env.projects }} | tr -d "package.json" | xargs -I {} cp -r ${{ env.npm-cache }}/{}/node_modules {}
+      echo ${{ env.projects }} | sed "s/package.json//" | xargs -I {} cp -r ${{ env.npm-cache }}/{}/node_modules {}
       echo "Packages collected successfully."
       echo "::endgroup::"
   - name: Build
@@ -80,7 +82,7 @@ runs:
     working-directory: ${{ github.workspace }}/${{ env.root-directory }}
     run: |
       echo "::group::Build"
-      echo ${{ env.projects }} | tr -d "package.json" | xargs -I {} npm --prefix {} run build
+      echo ${{ env.projects }} | sed "s/package.json//" | xargs -I {} npm --prefix {} run build
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
