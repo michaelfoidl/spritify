@@ -42,7 +42,7 @@ runs:
       echo "::group::Find projects to build"
       PROJECTS=$(find . -type f -name "*.csproj" | tr "\n" " ")
       echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
-      echo "$PROJECTS" | xargs -I {} echo "projects='{}'" >> $GITHUB_ENV
+      echo "projects='$PROJECTS'" >> $GITHUB_ENV
       echo "::endgroup::"
   - name: Look for cached dependencies
     uses: actions/cache@v2
@@ -66,14 +66,14 @@ runs:
     working-directory: ${{ github.workspace }}/${{ env.root-directory }}
     run: |
       echo "::group::Nuget Restore"
-      echo ${{ env.projects }} | xargs -I {} dotnet restore {} --packages ${{ env.nuget-cache }} --no-dependencies
+      echo ${{ env.projects }} | tr " " "\n" | xargs -I {} dotnet restore {} --packages ${{ env.nuget-cache }} --no-dependencies
       echo "::endgroup::"
   - name: Build
     shell: bash
     working-directory: ${{ github.workspace }}/${{ env.root-directory }}
     run: |
       echo "::group::Build"
-      echo ${{ env.projects }} | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
+      echo ${{ env.projects }} | tr " " "\n" | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
