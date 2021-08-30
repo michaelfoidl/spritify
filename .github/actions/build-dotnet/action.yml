@@ -42,7 +42,7 @@ runs:
       echo "::group::Find projects to build"
       PROJECTS=$(find . -type f -name "*.csproj")
       echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
-      echo "projects=$PROJECTS" >> $GITHUB_ENV
+      echo "projects='$PROJECTS'" >> $GITHUB_ENV
       echo "::endgroup::"
   - name: Look for cached dependencies
     uses: actions/cache@v2
