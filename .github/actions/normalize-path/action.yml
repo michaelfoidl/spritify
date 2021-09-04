@@ -16,5 +16,5 @@ runs:
     shell: bash
     run: |
       echo "::group::Normalize path"
-      echo ${{ inputs.path }} | | tr -d "./" | xargs -I {} echo "::set-output name=path::$(echo {})"
+      echo ${{ inputs.path }} | tr -d "./" | xargs -I {} echo "::set-output name=path::$(echo {})"
       echo "::endgroup::"
