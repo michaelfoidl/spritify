@@ -57,11 +57,11 @@ runs:
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Collect packages"
-      if [ ${{ steps.npm-cache.outputs.cache-hit }} != "true" ];
+      if [ ${{ steps.npm-cache.outputs.cache-hit }} == "false" ];
       then
-      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} mkdir -p ${{ inputs.npm-cache }}/{}
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} cp {} ${{ inputs.npm-cache }}/{}
-      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ${{ inputs.npm-cache }}/{} install ${{ inputs.npm-cache }}/{}
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} mkdir -p ${{ inputs.npm-cache }}/{};
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} cp {} ${{ inputs.npm-cache }}/{};
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ${{ inputs.npm-cache }}/{} install ${{ inputs.npm-cache }}/{};
       fi
       echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} cp -r ${{ inputs.npm-cache }}/{}/node_modules {}
       echo "Packages collected successfully."
