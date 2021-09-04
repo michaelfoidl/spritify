@@ -44,7 +44,7 @@ runs:
       echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
       echo "projects='$PROJECTS'" >> $GITHUB_ENV
       echo "Found Projects:"
-      echo "${{ env.projects }}"
+      echo "$PROJECTS"
       echo "::endgroup::"
   - name: Look for cached dependencies
     uses: actions/cache@v2
