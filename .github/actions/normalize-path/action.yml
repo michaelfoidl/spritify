@@ -7,7 +7,7 @@ inputs:
 outputs:
   path:
     description: 'The normalized path'
-    value: ${{ steps.normalize-path.outputs.projects }}
+    value: ${{ steps.normalize-path.outputs.path }}
 runs:
   using: 'composite'
   steps:
@@ -16,5 +16,7 @@ runs:
     shell: bash
     run: |
       echo "::group::Normalize path"
-      echo ${{ inputs.path }} | tr -d "./" | xargs -I {} echo "::set-output name=path::$(echo {})"
+      NORMALIZED_PATH=$(echo ${{ inputs.path }} | tr -d "./")
+      echo "normalized path to $NORMALIZED_PATH"
+      echo "::set-output name=path::$(echo $NORMALIZED_PATH)
       echo "::endgroup::"
