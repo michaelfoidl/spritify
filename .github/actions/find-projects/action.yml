@@ -16,7 +16,7 @@ runs:
   steps:
   - name: Normalize path
     id: normalize-path
-    uses: ./github/actions/normalize-path
+    uses: ././github/actions/normalize-path
     with:
       path: ${{ inputs.root-directory }}
   - name: Find projects
