@@ -68,7 +68,7 @@ runs:
       echo "::group::Collect packages"
       if [ ${{ steps.npm-cache.outputs.cache-hit }} != "true" ];
       then
-      mkdir -p ${{ env.npm-cache }}
+      echo ${{ env.projects }} | sed "s/[A-Za-z.]*.csproj// | tr " " "\n" | xargs -I {} mkdir -p ${{ env.npm-cache }}/{}
       echo ${{ env.projects }} | tr " " "\n" | xargs -I {} cp {} ${{ env.npm-cache }}/{}
       echo ${{ env.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ${{ env.npm-cache }}/{} install ${{ env.npm-cache }}/{}
       fi
