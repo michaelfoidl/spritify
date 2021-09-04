@@ -45,6 +45,7 @@ runs:
       echo "projects='$PROJECTS'" >> $GITHUB_ENV
       echo "Found Projects:"
       echo "$PROJECTS"
+      echo "$projects"
       echo "::endgroup::"
   - name: Look for cached dependencies
     uses: actions/cache@v2
@@ -70,6 +71,8 @@ runs:
       echo "::group::Collect packages"
       echo "Found projects:"
       echo "${{ env.projects }}"
+      echo "$PROJECTS"
+      echo "$projects"
       if [ ${{ steps.npm-cache.outputs.cache-hit }} != "true" ];
       then
       echo ${{ env.projects }} | tr " " "\n" | xargs -I {} mkdir -p ${{ env.npm-cache }}/{}
