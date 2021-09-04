@@ -18,5 +18,5 @@ runs:
       echo "::group::Normalize path"
       NORMALIZED_PATH=$(echo ${{ inputs.path }} | tr -d "./")
       echo "normalized path to $NORMALIZED_PATH"
-      echo "::set-output name=path::$(echo $NORMALIZED_PATH)
+      echo "::set-output name=path::$(echo $NORMALIZED_PATH)"
       echo "::endgroup::"
