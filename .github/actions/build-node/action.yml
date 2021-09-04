@@ -36,18 +36,11 @@ runs:
     with:
       node-version: ${{ env.node-version }}
   - name: Find projects to build
-    shell: bash
-    working-directory: ${{ github.workspace }}/${{ env.root-directory }}
-    run: |
-      echo "::group::Find projects to build"
-      PROJECTS=$(find . -type f -name "package.json" | tr "\n" " ")
-      echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
-      echo "projects='$PROJECTS'" >> $GITHUB_ENV
-      echo "Found Projects:"
-      echo "$PROJECTS"
-      echo "$projects"
-      echo "$GITHUB_JOB"
-      echo "::endgroup::"
+    uses: ${{github.workspace}}/.github/actions/find-projects
+    id: find-projects
+    with:
+      root-directory: ${{ env.root-directory }}
+      project-file-name-schema: 'package.json'
   - name: Look for cached dependencies
     uses: actions/cache@v2
     id: npm-cache
@@ -70,16 +63,13 @@ runs:
     working-directory: ${{ github.workspace }}/${{ env.root-directory }}
     run: |
       echo "::group::Collect packages"
-      echo "Found projects:"
-      echo "${{ env.projects }}"
-      echo "$projects"
       if [ ${{ steps.npm-cache.outputs.cache-hit }} != "true" ];
       then
-      echo ${{ env.projects }} | tr " " "\n" | xargs -I {} mkdir -p ${{ env.npm-cache }}/{}
-      echo ${{ env.projects }} | tr " " "\n" | xargs -I {} cp {} ${{ env.npm-cache }}/{}
-      echo ${{ env.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ${{ env.npm-cache }}/{} install ${{ env.npm-cache }}/{}
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} mkdir -p ${{ env.npm-cache }}/{}
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} cp {} ${{ env.npm-cache }}/{}
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ${{ env.npm-cache }}/{} install ${{ env.npm-cache }}/{}
       fi
-      echo ${{ env.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} cp -r ${{ env.npm-cache }}/{}/node_modules {}
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} cp -r ${{ env.npm-cache }}/{}/node_modules {}
       echo "Packages collected successfully."
       echo "::endgroup::"
   - name: Build
@@ -87,7 +77,7 @@ runs:
     working-directory: ${{ github.workspace }}/${{ env.root-directory }}
     run: |
       echo "::group::Build"
-      echo ${{ env.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} npm --prefix {} run build
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} npm --prefix {} run build
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2

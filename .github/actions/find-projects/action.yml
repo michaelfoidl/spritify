@@ -1,0 +1,34 @@
+name: find-projects
+description: 'Searches for projects that match a given schema in the given workspace.'
+inputs:
+  root-directory:
+    description: 'Path to the root directory where matching projects are searched for'
+    required: true
+  project-file-name-schema:
+    description: 'An expression to be used as a parameter for the "find" command that identifies matching projects'
+    required: true
+outputs:
+  projects:
+    description: 'A space-separated list of matching projects'
+    value: ${{ steps.find-projects.outputs.projects }}
+runs:
+  using: 'composite'
+  steps:
+  - name: Process input parameters
+    shell: bash
+    run: |
+      echo "::group::Process input parameters"
+      echo ${{ inputs.root-directory }} | tr -d "./" | xargs -I {} echo "fp_root-directory={}" >> $GITHUB_ENV
+      echo "fp_project-file-name-schema=${{ inputs.project-file-name-schema }}" >> $GITHUB_ENV
+      echo "Finished successfully."
+      echo "::endgroup::"
+  - name: Find projects
+    id: find-projects
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ env.fp_root-directory }}
+    run: |
+      echo "::group::Find projects"
+      PROJECTS=$(find . -type f -name ${{ env.fp_project-file-name-schema }} | tr "\n" " ")
+      echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
+      echo "::set-output name=projects::$(echo $PROJECTS)"
+      echo "::endgroup::"
