@@ -20,33 +20,27 @@ inputs:
 runs:
   using: 'composite'
   steps:
-  - name: Process input parameters
-    shell: bash
-    run: |
-      echo "::group::Process input parameters"
-      echo "dotnet-version=${{ inputs.dotnet-version }}" >> $GITHUB_ENV
-      echo ${{ inputs.root-directory }} | tr -d "./" | xargs -I {} echo "root-directory={}" >> $GITHUB_ENV
-      echo "nuget-cache=${{ inputs.nuget-cache }}" >> $GITHUB_ENV
-      echo "nuget-cache-version=${{ inputs.nuget-cache-version }}" >> $GITHUB_ENV
-      echo "artifact-name=${{ inputs.artifact-name }}" >> $GITHUB_ENV
-      echo "Finished successfully."
-      echo "::endgroup::"
   - name: Setup .NET
     uses: actions/setup-dotnet@v1
     with:
-      dotnet-version: ${{ env.dotnet-version }}
+      dotnet-version: ${{ inputs.dotnet-version }}
+  - name: Normalize path
+    id: normalize-path
+    uses: ./github/actions/normalize-path
+    with:
+      path: ${{ inputs.root-directory }}
   - name: Find projects to build
     uses: ./.github/actions/find-projects
     id: find-projects
     with:
-      root-directory: ${{ env.root-directory }}
+      root-directory: ${{ inputs.root-directory }}
       project-file-name-schema: '*.csproj'
   - name: Look for cached dependencies
     uses: actions/cache@v2
     id: nuget-cache
     with:
-      path: ${{ env.nuget-cache }}
-      key: ${{ runner.os }}-nuget-v${{ env.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
+      path: ${{ inputs.nuget-cache }}
+      key: ${{ runner.os }}-nuget-v${{ inputs.nuget-cache-version }}-${{ hashFiles('**/packages.lock.json') }}
   - name: Analyze Cache
     shell: bash
     run: |
@@ -60,22 +54,22 @@ runs:
       echo "::endgroup::"
   - name: Nuget Restore
     shell: bash
-    working-directory: ${{ github.workspace }}/${{ env.root-directory }}
+    working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Nuget Restore"
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet restore {} --packages ${{ env.nuget-cache }} --no-dependencies
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet restore {} --packages ${{ inputs.nuget-cache }} --no-dependencies
       echo "::endgroup::"
   - name: Build
     shell: bash
-    working-directory: ${{ github.workspace }}/${{ env.root-directory }}
+    working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Build"
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ env.nuget-cache }}
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ inputs.nuget-cache }}
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
     with:
-      name: ${{ env.artifact-name }}
+      name: ${{ inputs.artifact-name }}
       path: |
-        ${{ github.workspace }}/**/${{ env.root-directory }}/**/bin
-        ${{ github.workspace }}/**/${{ env.root-directory }}/**/obj
+        ${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/bin
+        ${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/obj

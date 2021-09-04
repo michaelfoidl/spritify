@@ -20,33 +20,27 @@ inputs:
 runs:
   using: 'composite'
   steps:
-  - name: Process input parameters
-    shell: bash
-    run: |
-      echo "::group::Process input parameters"
-      echo "node-version=${{ inputs.node-version }}" >> $GITHUB_ENV
-      echo ${{ inputs.root-directory }} | tr -d "./" | xargs -I {} echo "root-directory={}" >> $GITHUB_ENV
-      echo "npm-cache=${{ inputs.npm-cache }}" >> $GITHUB_ENV
-      echo "npm-cache-version=${{ inputs.npm-cache-version }}" >> $GITHUB_ENV
-      echo "artifact-name=${{ inputs.artifact-name }}" >> $GITHUB_ENV
-      echo "Finished successfully."
-      echo "::endgroup::"
   - name: Setup Node.js
     uses: actions/setup-node@v2
     with:
-      node-version: ${{ env.node-version }}
+      node-version: ${{ inputs.node-version }}
+  - name: Normalize path
+    id: normalize-path
+    uses: ./github/actions/normalize-path
+    with:
+      path: ${{ inputs.root-directory }}
   - name: Find projects to build
     uses: ./.github/actions/find-projects
     id: find-projects
     with:
-      root-directory: ${{ env.root-directory }}
+      root-directory: ${{ inputs.root-directory }}
       project-file-name-schema: 'package.json'
   - name: Look for cached dependencies
     uses: actions/cache@v2
     id: npm-cache
     with:
-      path: ${{ env.npm-cache }}
-      key: ${{ runner.os }}-npm-v${{ env.npm-cache-version }}-${{ hashFiles('**/package-lock.json') }}
+      path: ${{ inputs.npm-cache }}
+      key: ${{ runner.os }}-npm-v${{ inputs.npm-cache-version }}-${{ hashFiles('**/package-lock.json') }}
   - name: Analyze Cache
     shell: bash
     run: |
@@ -60,21 +54,21 @@ runs:
       echo "::endgroup::"
   - name: Collect packages
     shell: bash
-    working-directory: ${{ github.workspace }}/${{ env.root-directory }}
+    working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Collect packages"
       if [ ${{ steps.npm-cache.outputs.cache-hit }} != "true" ];
       then
-      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} mkdir -p ${{ env.npm-cache }}/{}
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} cp {} ${{ env.npm-cache }}/{}
-      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ${{ env.npm-cache }}/{} install ${{ env.npm-cache }}/{}
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} mkdir -p ${{ inputs.npm-cache }}/{}
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} cp {} ${{ inputs.npm-cache }}/{}
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ${{ inputs.npm-cache }}/{} install ${{ inputs.npm-cache }}/{}
       fi
-      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} cp -r ${{ env.npm-cache }}/{}/node_modules {}
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} cp -r ${{ inputs.npm-cache }}/{}/node_modules {}
       echo "Packages collected successfully."
       echo "::endgroup::"
   - name: Build
     shell: bash
-    working-directory: ${{ github.workspace }}/${{ env.root-directory }}
+    working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Build"
       echo ${{ steps.find-projects.outputs.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} npm --prefix {} run build
@@ -82,7 +76,7 @@ runs:
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
     with:
-      name: ${{ env.artifact-name }}
+      name: ${{ inputs.artifact-name }}
       path: |
-        ${{ github.workspace }}/**/${{ env.root-directory }}/**/dist
-        !${{ github.workspace }}/**/${{ env.root-directory }}/**/node_modules
+        ${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/dist
+        !${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/node_modules

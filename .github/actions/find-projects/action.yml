@@ -14,21 +14,18 @@ outputs:
 runs:
   using: 'composite'
   steps:
-  - name: Process input parameters
-    shell: bash
-    run: |
-      echo "::group::Process input parameters"
-      echo ${{ inputs.root-directory }} | tr -d "./" | xargs -I {} echo "fp_root-directory={}" >> $GITHUB_ENV
-      echo "fp_project-file-name-schema=${{ inputs.project-file-name-schema }}" >> $GITHUB_ENV
-      echo "Finished successfully."
-      echo "::endgroup::"
+  - name: Normalize path
+    id: normalize-path
+    uses: ./github/actions/normalize-path
+    with:
+      path: ${{ inputs.root-directory }}
   - name: Find projects
     id: find-projects
     shell: bash
-    working-directory: ${{ github.workspace }}/${{ env.fp_root-directory }}
+    working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Find projects"
-      PROJECTS=$(find . -type f -name ${{ env.fp_project-file-name-schema }} | tr "\n" " ")
+      PROJECTS=$(find . -type f -name ${{ inputs.project-file-name-schema }} | tr "\n" " ")
       echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
       echo "::set-output name=projects::$(echo $PROJECTS)"
       echo "::endgroup::"

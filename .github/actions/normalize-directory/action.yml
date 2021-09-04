@@ -1,0 +1,20 @@
+name: normalize-path
+description: 'Removes the relative part of a path (e.g. "./my-directory/abc" becomes "my-directory/abc").'
+inputs:
+  path:
+    description: 'The path to be normalized'
+    required: true
+outputs:
+  path:
+    description: 'The normalized path'
+    value: ${{ steps.normalize-path.outputs.projects }}
+runs:
+  using: 'composite'
+  steps:
+  - name: Normalize path
+    id: normalize-path
+    shell: bash
+    run: |
+      echo "::group::Normalize path"
+      echo ${{ inputs.path }} | | tr -d "./" | xargs -I {} echo "::set-output name=path::$(echo {})"
+      echo "::endgroup::"
