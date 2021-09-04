@@ -43,6 +43,8 @@ runs:
       PROJECTS=$(find . -type f -name "package.json" | tr "\n" " ")
       echo $PROJECTS | wc -w | xargs -I {} echo "Found {} project(s)."
       echo "projects='$PROJECTS'" >> $GITHUB_ENV
+      echo "Found Projects:"
+      echo "${{ env.projects }}"
       echo "::endgroup::"
   - name: Look for cached dependencies
     uses: actions/cache@v2
@@ -66,9 +68,11 @@ runs:
     working-directory: ${{ github.workspace }}/${{ env.root-directory }}
     run: |
       echo "::group::Collect packages"
+      echo "Found projects:"
+      echo "${{ env.projects }}"
       if [ ${{ steps.npm-cache.outputs.cache-hit }} != "true" ];
       then
-      echo ${{ env.projects }} | sed "s/[A-Za-z.]*.csproj//" | tr " " "\n" | xargs -I {} mkdir -p ${{ env.npm-cache }}/{}
+      echo ${{ env.projects }} | tr " " "\n" | xargs -I {} mkdir -p ${{ env.npm-cache }}/{}
       echo ${{ env.projects }} | tr " " "\n" | xargs -I {} cp {} ${{ env.npm-cache }}/{}
       echo ${{ env.projects }} | sed "s/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ${{ env.npm-cache }}/{} install ${{ env.npm-cache }}/{}
       fi
