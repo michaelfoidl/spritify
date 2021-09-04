@@ -52,7 +52,7 @@ jobs:
       nuget-cache-version: 1
       node-version: '14.17.x'
       npm-cache: ~/.npm/packages/development/web
-      npm-cache-version: 1
+      npm-cache-version: 2
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
