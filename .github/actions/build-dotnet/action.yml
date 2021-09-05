@@ -34,7 +34,7 @@ runs:
     id: find-projects
     with:
       root-directory: ${{ inputs.root-directory }}
-      project-file-name-schema: '*.csproj'
+      project-name-schema: '*.csproj'
   - name: Look for cached dependencies
     uses: actions/cache@v2
     id: nuget-cache
