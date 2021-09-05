@@ -11,7 +11,6 @@ inputs:
     description: 'If set to true, only test projects are returned. If set to false, all projects except test projects are returned. If not set, all matching projects are returned.'
     required: false
     default: ''
-  only-test
 outputs:
   projects:
     description: 'A space-separated list of matching projects'
