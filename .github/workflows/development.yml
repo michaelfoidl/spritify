@@ -22,7 +22,7 @@ jobs:
           root-directory: ./common
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-common-${{ github.sha }}
+          artifact-name: spritify-common-build-${{ github.sha }}
   build-testFramework:
     runs-on: ubuntu-latest
     needs: build-common
@@ -30,9 +30,9 @@ jobs:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.Common
-        uses: ./.github/actions/restore-dependency
+        uses: actions/download-artifact@v2
         with:
-          artifact-name: spritify-common-${{ github.sha }}
+          key: spritify-common-build-${{ github.sha }}
       - name: Build Spritify.TestFramework
         uses: ./.github/actions/build-dotnet
         with:
@@ -40,7 +40,7 @@ jobs:
           root-directory: ./testFramework
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-testFramework-${{ github.sha }}
+          artifact-name: spritify-testFramework-build-${{ github.sha }}
   build-api:
     runs-on: ubuntu-latest
     needs: build-common
@@ -48,9 +48,9 @@ jobs:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.Common
-        uses: ./.github/actions/restore-dependency
+        uses: actions/download-artifact@v2
         with:
-          artifact-name: spritify-common-${{ github.sha }}
+          key: spritify-common-build-${{ github.sha }}
       - name: Build Spritify.Api
         uses: ./.github/actions/build-dotnet
         with:
@@ -58,7 +58,7 @@ jobs:
           root-directory: ./api
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-api-${{ github.sha }}
+          artifact-name: spritify-api-build-${{ github.sha }}
   build-web:
     runs-on: ubuntu-latest
     needs: build-common
@@ -66,9 +66,9 @@ jobs:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.Common
-        uses: ./.github/actions/restore-dependency
+        uses: actions/download-artifact@v2
         with:
-          artifact-name: spritify-common-${{ github.sha }}
+          key: spritify-common-build-${{ github.sha }}
       - name: Build Spritify.Web (1/2)
         uses: ./.github/actions/build-dotnet
         with:
@@ -76,7 +76,7 @@ jobs:
           root-directory: ./web
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-web-${{ github.sha }}
+          artifact-name: spritify-web-build-${{ github.sha }}
       - name: Build Spritify.Web (2/2)
         uses: ./.github/actions/build-node
         with:
@@ -84,7 +84,7 @@ jobs:
           root-directory: ./web
           npm-cache: ${{ env.npm-cache }}
           npm-cache-version: ${{ env.npm-cache-version }}
-          artifact-name: spritify-web-${{ github.sha }}
+          artifact-name: spritify-web-build-${{ github.sha }}
   publish-api:
     runs-on: ubuntu-latest
     needs: build-api
@@ -96,9 +96,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Restore Spritify.Api
-        uses: ./.github/actions/restore-dependency
+        uses: actions/download-artifact@v2
         with:
-          artifact-name: spritify-api-${{ github.sha }}
+          key: spritify-api-build-${{ github.sha }}
       - name: Publish Spritify API
         run: |
           dotnet publish ./Spritify.Api/Spritify.Api.csproj --configuration Release --output ${{ env.output-folder }} --no-build
@@ -123,9 +123,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Restore Spritify.Web
-        uses: ./.github/actions/restore-dependency
+        uses: actions/download-artifact@v2
         with:
-          artifact-name: spritify-web-${{ github.sha }}
+          key: spritify-web-build-${{ github.sha }}
       - name: Publish Spritify Web
         run: |
           dotnet publish ./Spritify.Web/Spritify.Web.csproj --configuration Release --output ${{ env.output-folder }} --no-build

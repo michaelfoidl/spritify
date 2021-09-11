@@ -29,14 +29,6 @@ runs:
     uses: ./.github/actions/normalize-path
     with:
       path: ${{ inputs.root-directory }}
-  - name: Create cache key
-    id: cache-key
-    uses: ./.github/actions/create-cache-key
-    with:
-      cache-type: 'nuget'
-      cache-version: ${{ inputs.nuget-cache-version }}
-      artifact-name: ${{ inputs.artifact-name }}
-      hash: ${{ hashFiles('**/packages.lock.json') }}
   - name: Find projects to build
     uses: ./.github/actions/find-projects
     id: find-projects
@@ -48,7 +40,7 @@ runs:
     id: nuget-cache
     with:
       path: ${{ inputs.nuget-cache }}
-      key: ${{ steps.cache-key.outputs.key }}
+      key: ${{ runner.os }}-nuget-v${{ inputs.nuget-cache-version }}-${{ hashFiles('${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/packages.lock.json') }}
   - name: Analyze Cache
     shell: bash
     run: |
@@ -74,8 +66,10 @@ runs:
       echo "::group::Build"
       echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ inputs.nuget-cache }}
       echo "::endgroup::"
-  - name: Archive output
-    uses: actions/cache@v2
+  - name: Archive artifacts
+    uses: actions/upload-artifact@v2
     with:
-      key: ${{ inputs.artifact-name }}
-      path: ${{ github.workspace }}
+      name: ${{ inputs.artifact-name }}
+      path: |
+        ${{ github.workspace }}/**/bin
+        ${{ github.workspace }}/**/obj
