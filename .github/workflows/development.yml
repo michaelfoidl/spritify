@@ -31,6 +31,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+      - name: Restore Spritify.Common build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: spritify-common-build-${{ github.sha }}
       - name: Build Spritify.TestFramework
         uses: ./.github/actions/build-dotnet
         with:

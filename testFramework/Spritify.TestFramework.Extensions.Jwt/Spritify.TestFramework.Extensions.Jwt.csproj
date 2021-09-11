@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\common\Spritify.Autofac\Spritify.Common.Autofac.csproj" />
+    <ProjectReference Include="..\..\common\Spritify.Common.Autofac\Spritify.Common.Autofac.csproj" />
     <ProjectReference Include="..\..\common\Spritify.Common\Spritify.Common.csproj" />
     <ProjectReference Include="..\Spritify.TestFramework\Spritify.TestFramework.csproj" />
   </ItemGroup>

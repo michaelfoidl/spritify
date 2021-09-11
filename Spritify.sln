@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{6987E0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Common", "common\Spritify.Common\Spritify.Common.csproj", "{B3725C4E-7770-4467-BC74-2FCB8E4FC3B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spritify.Common.Autofac", "common\Spritify.Common.Autofac\Spritify.Common.Autofac.csproj", "{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{BEDB5A79-A1F3-411B-9DE0-BC7FB1AD135D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api", "api\Spritify.Api\Spritify.Api.csproj", "{C27F406E-2C02-4077-AF00-0F66F59806AF}"
@@ -114,6 +116,10 @@ Global
 		{1CC6029B-8D22-45EA-B181-3EA765F92CE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CC6029B-8D22-45EA-B181-3EA765F92CE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CC6029B-8D22-45EA-B181-3EA765F92CE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,6 +142,7 @@ Global
 		{68F1CD12-E0E8-4CD7-A883-C271601B08E2} = {7F194102-A8E6-4177-8FFA-97A46D2B5991}
 		{DBF7B8AC-848A-4D5F-A97E-DDFFBB9FCF78} = {7F194102-A8E6-4177-8FFA-97A46D2B5991}
 		{1CC6029B-8D22-45EA-B181-3EA765F92CE4} = {7F194102-A8E6-4177-8FFA-97A46D2B5991}
+		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82} = {6987E055-90B9-458C-AB88-D9BD69FF10A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD304890-DEF1-462E-9016-C6FC9B72B7C6}
