@@ -90,7 +90,7 @@ runs:
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
     with:
-      name: ${{ inputs.artifact-name }}
+      name: ${{ inputs.artifact-name }}-${{ github.sha }}
       path: |
         ${{ github.workspace }}/**/dist
         !${{ github.workspace }}/**/node_modules

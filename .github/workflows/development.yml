@@ -27,7 +27,7 @@ jobs:
           root-directory: ./common
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-common-build-${{ github.sha }}
+          artifact-name: spritify-common-build
   build-testFramework:
     runs-on: ubuntu-latest
     outputs:
@@ -50,7 +50,7 @@ jobs:
           root-directory: ./testFramework
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-testFramework-build-${{ github.sha }}
+          artifact-name: spritify-testFramework-build
   build-api:
     runs-on: ubuntu-latest
     outputs:
@@ -73,7 +73,7 @@ jobs:
           root-directory: ./api
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-api-build-${{ github.sha }}
+          artifact-name: spritify-api-build
   build-web:
     runs-on: ubuntu-latest
     outputs:
@@ -96,7 +96,7 @@ jobs:
           root-directory: ./web
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-web-build-${{ github.sha }}
+          artifact-name: spritify-web-build
       - name: Build Spritify.Web (2/2)
         uses: ./.github/actions/build-node
         with:
@@ -104,7 +104,7 @@ jobs:
           root-directory: ./web
           npm-cache: ${{ env.npm-cache }}
           npm-cache-version: ${{ env.npm-cache-version }}
-          artifact-name: spritify-web-build-${{ github.sha }}
+          artifact-name: spritify-web-build
   publish-api:
     runs-on: ubuntu-latest
     needs: build-api
