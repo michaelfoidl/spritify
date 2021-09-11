@@ -78,6 +78,4 @@ runs:
     uses: actions/cache@v2
     with:
       key: ${{ inputs.artifact-name }}
-      path: |
-        ${{ github.workspace }}/**/bin
-        ${{ github.workspace }}/**/obj
+      path: ${{ github.workspace }}
