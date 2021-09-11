@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\common\Spritify.Autofac\Spritify.Common.Autofac.csproj" />
+    <ProjectReference Include="..\..\common\Spritify.Common\Spritify.Common.csproj" />
+    <ProjectReference Include="..\Spritify.TestFramework\Spritify.TestFramework.csproj" />
+  </ItemGroup>
+
+</Project>

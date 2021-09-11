@@ -21,6 +21,24 @@ jobs:
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
           artifact-name: spritify-common-build-${{ github.sha }}
+  build-testFramework:
+    runs-on: ubuntu-latest
+    needs: build-common
+    env:
+      dotnet-version: '5.0.x'
+      nuget-cache: ~/.nuget/packages/development/testFramework
+      nuget-cache-version: 1
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.TestFramework
+        uses: ./.github/actions/build-dotnet
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          root-directory: ./testFramework
+          nuget-cache: ${{ env.nuget-cache }}
+          nuget-cache-version: ${{ env.nuget-cache-version }}
+          artifact-name: spritify-testFramework-build-${{ github.sha }}
   build-api:
     runs-on: ubuntu-latest
     needs: build-common
