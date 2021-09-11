@@ -2,14 +2,16 @@ name: development
 on:
   push:
     branches: [ development ]
-  workflow_dispatch:
+env:
+  dotnet-version: '5.0.x'
+  nuget-cache: ~/.nuget/packages
+  nuget-cache-version: 1
+  node-version: '14.17.x'
+  npm-cache: ~/.npm/packages
+  npm-cache-version: 2
 jobs:
   build-common:
     runs-on: ubuntu-latest
-    env:
-      dotnet-version: '5.0.x'
-      nuget-cache: ~/.nuget/packages/development/common
-      nuget-cache-version: 1
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
@@ -20,21 +22,17 @@ jobs:
           root-directory: ./common
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-common-build-${{ github.sha }}
+          artifact-name: spritify-common-${{ github.sha }}
   build-testFramework:
     runs-on: ubuntu-latest
     needs: build-common
-    env:
-      dotnet-version: '5.0.x'
-      nuget-cache: ~/.nuget/packages/development/testFramework
-      nuget-cache-version: 1
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.Common build artifacts
-        uses: actions/download-artifact@v2
+      - name: Restore Spritify.Common
+        uses: ./.github/actions/restore-dependency
         with:
-          name: spritify-common-build-${{ github.sha }}
+          artifact-name: spritify-common-${{ github.sha }}
       - name: Build Spritify.TestFramework
         uses: ./.github/actions/build-dotnet
         with:
@@ -42,21 +40,17 @@ jobs:
           root-directory: ./testFramework
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-testFramework-build-${{ github.sha }}
+          artifact-name: spritify-testFramework-${{ github.sha }}
   build-api:
     runs-on: ubuntu-latest
     needs: build-common
-    env:
-      dotnet-version: '5.0.x'
-      nuget-cache: ~/.nuget/packages/development/api
-      nuget-cache-version: 1
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.Common build artifacts
-        uses: actions/download-artifact@v2
+      - name: Restore Spritify.Common
+        uses: ./.github/actions/restore-dependency
         with:
-          name: spritify-common-build-${{ github.sha }}
+          artifact-name: spritify-common-${{ github.sha }}
       - name: Build Spritify.Api
         uses: ./.github/actions/build-dotnet
         with:
@@ -64,24 +58,17 @@ jobs:
           root-directory: ./api
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-api-build-${{ github.sha }}
+          artifact-name: spritify-api-${{ github.sha }}
   build-web:
     runs-on: ubuntu-latest
     needs: build-common
-    env:
-      dotnet-version: '5.0.x'
-      nuget-cache: ~/.nuget/packages/development/web
-      nuget-cache-version: 1
-      node-version: '14.17.x'
-      npm-cache: ~/.npm/packages/development/web
-      npm-cache-version: 2
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.Common build artifacts
-        uses: actions/download-artifact@v2
+      - name: Restore Spritify.Common
+        uses: ./.github/actions/restore-dependency
         with:
-          name: spritify-common-build-${{ github.sha }}
+          artifact-name: spritify-common-${{ github.sha }}
       - name: Build Spritify.Web (1/2)
         uses: ./.github/actions/build-dotnet
         with:
@@ -89,7 +76,7 @@ jobs:
           root-directory: ./web
           nuget-cache: ${{ env.nuget-cache }}
           nuget-cache-version: ${{ env.nuget-cache-version }}
-          artifact-name: spritify-web-build-${{ github.sha }}
+          artifact-name: spritify-web-${{ github.sha }}
       - name: Build Spritify.Web (2/2)
         uses: ./.github/actions/build-node
         with:
@@ -97,7 +84,7 @@ jobs:
           root-directory: ./web
           npm-cache: ${{ env.npm-cache }}
           npm-cache-version: ${{ env.npm-cache-version }}
-          artifact-name: spritify-web-build-${{ github.sha }}
+          artifact-name: spritify-web-${{ github.sha }}
   publish-api:
     runs-on: ubuntu-latest
     needs: build-api
@@ -108,10 +95,10 @@ jobs:
         working-directory: ./api
     steps:
       - uses: actions/checkout@v2
-      - name: Restore build artifacts
-        uses: actions/download-artifact@v2
+      - name: Restore Spritify.Api
+        uses: ./.github/actions/restore-dependency
         with:
-          name: spritify-api-build-${{ github.sha }}
+          artifact-name: spritify-api-${{ github.sha }}
       - name: Publish Spritify API
         run: |
           dotnet publish ./Spritify.Api/Spritify.Api.csproj --configuration Release --output ${{ env.output-folder }} --no-build
@@ -135,10 +122,10 @@ jobs:
         working-directory: ./web
     steps:
       - uses: actions/checkout@v2
-      - name: Restore build artifacts
-        uses: actions/download-artifact@v2
+      - name: Restore Spritify.Web
+        uses: ./.github/actions/restore-dependency
         with:
-          name: spritify-web-build-${{ github.sha }}
+          artifact-name: spritify-web-${{ github.sha }}
       - name: Publish Spritify Web
         run: |
           dotnet publish ./Spritify.Web/Spritify.Web.csproj --configuration Release --output ${{ env.output-folder }} --no-build

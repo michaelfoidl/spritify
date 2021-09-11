@@ -29,6 +29,14 @@ runs:
     uses: ./.github/actions/normalize-path
     with:
       path: ${{ inputs.root-directory }}
+  - name: Create cache key
+    id: cache-key
+    uses: ./.github/actions/create-cache-key
+    with:
+      type: 'nuget'
+      version: ${{ inputs.npm-cache-version }}
+      artifact-name: ${{ inputs.artifact-name }}
+      hash: ${{ hashFiles('**/package-lock.json') }}
   - name: Find projects to build
     uses: ./.github/actions/find-projects
     id: find-projects
@@ -38,9 +46,10 @@ runs:
   - name: Look for cached dependencies
     uses: actions/cache@v2
     id: npm-cache
+    working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     with:
       path: ${{ inputs.npm-cache }}
-      key: ${{ runner.os }}-npm-v${{ inputs.npm-cache-version }}-${{ hashFiles('**/package-lock.json') }}
+      key: ${{ steps.cache-key.outputs.key }}
   - name: Analyze Cache
     shell: bash
     run: |
@@ -75,10 +84,10 @@ runs:
       echo "::group::Build"
       echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} npm --prefix {} run build
       echo "::endgroup::"
-  - name: Archive artifacts
-    uses: actions/upload-artifact@v2
+  - name: Archive output
+    uses: actions/cache@v2
     with:
-      name: ${{ inputs.artifact-name }}
+      key: ${{ inputs.artifact-name }}
       path: |
-        ${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/dist
-        !${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/node_modules
+        ${{ github.workspace }}/**/dist
+        !${{ github.workspace }}/**/node_modules

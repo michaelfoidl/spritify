@@ -1,0 +1,14 @@
+name: restore-dependency
+description: 'Restores the given dependency.'
+inputs:
+  artifact-name:
+    description: 'Name of the build artifact'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+  - name: Restore artifacts
+    uses: actions/cache@v2
+    with:
+      path: ${{ github.workspace }}
+      key: ${{ inputs.artifact-name }}

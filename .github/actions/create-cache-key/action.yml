@@ -1,0 +1,31 @@
+name: create-cache-key
+description: 'Creates a cache key following a standardized format.'
+inputs:
+  cache-type:
+    description: 'Type of information that is stored in the cache'
+    required: true
+  cache-version:
+    description: 'Version of the cache'
+    required: false
+    default: '1'
+  artifact-name:
+    description: 'Name of the build artifact'
+    required: true
+  hash:
+    description: 'Calculated value that changes whenever the cache should be invalidated'
+outputs:
+  key:
+    description: 'The cache key'
+    value: ${{ steps.create-cache-key.outputs.key }}
+runs:
+  using: 'composite'
+  steps:
+  - name: Create cache key
+    id: create-cache-key
+    shell: bash
+    run: |
+      echo "::group::Create cache key"
+      CACHE_KEY=$(echo ${{ runner.os }}-${{ inputs.cache-type }}-${{ inputs.artifact-name }}-v${{ inputs.cache-version }}-${{ inputs.hash }})
+      echo "built cache key with value $CACHE_KEY"
+      echo "::set-output name=key::$(echo $CACHE_KEY)"
+      echo "::endgroup::"
