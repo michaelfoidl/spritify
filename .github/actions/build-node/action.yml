@@ -17,6 +17,10 @@ inputs:
   artifact-name:
     description: 'Name of the build artifact'
     required: true
+outputs:
+  artifact-key:
+    description: 'Key to the build artifact'
+    value: ${{ inputs.artifact-name }}-${{ github.sha }}
 runs:
   using: 'composite'
   steps:
@@ -29,6 +33,14 @@ runs:
     uses: ./.github/actions/normalize-path
     with:
       path: ${{ inputs.root-directory }}
+  - name: Create cache key
+    id: cache-key
+    uses: ./.github/actions/create-cache-key
+    with:
+      cache-type: 'nuget'
+      cache-version: ${{ inputs.npm-cache-version }}
+      artifact-name: ${{ inputs.artifact-name }}
+      hash-glob: ${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/package-lock.json
   - name: Find projects to build
     uses: ./.github/actions/find-projects
     id: find-projects
@@ -40,7 +52,7 @@ runs:
     id: npm-cache
     with:
       path: ${{ inputs.npm-cache }}
-      key: ${{ runner.os }}-npm-v${{ inputs.npm-cache-version }}-${{ hashFiles('${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/packages.lock.json') }}
+      key: ${{ steps.cache-key.outputs.key }}
   - name: Analyze Cache
     shell: bash
     run: |

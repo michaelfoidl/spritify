@@ -12,10 +12,15 @@ env:
 jobs:
   build-common:
     runs-on: ubuntu-latest
+    outputs:
+      artifact-key:
+        description: 'Key to the build artifact'
+        value: ${{ steps.build.outputs.artifact-key }}
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Build Spritify.Common
+        id: build
         uses: ./.github/actions/build-dotnet
         with:
           dotnet-version: ${{ env.dotnet-version }}
@@ -25,6 +30,10 @@ jobs:
           artifact-name: spritify-common-build-${{ github.sha }}
   build-testFramework:
     runs-on: ubuntu-latest
+    outputs:
+      artifact-key:
+        description: 'Key to the build artifact'
+        value: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
       - name: Checkout latest version
@@ -32,8 +41,9 @@ jobs:
       - name: Restore Spritify.Common
         uses: actions/download-artifact@v2
         with:
-          name: spritify-common-build-${{ github.sha }}
+          name: ${{ jobs.build-common.outputs.artifact-key }}
       - name: Build Spritify.TestFramework
+        id: build
         uses: ./.github/actions/build-dotnet
         with:
           dotnet-version: ${{ env.dotnet-version }}
@@ -43,6 +53,10 @@ jobs:
           artifact-name: spritify-testFramework-build-${{ github.sha }}
   build-api:
     runs-on: ubuntu-latest
+    outputs:
+      artifact-key:
+        description: 'Key to the build artifact'
+        value: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
       - name: Checkout latest version
@@ -50,8 +64,9 @@ jobs:
       - name: Restore Spritify.Common
         uses: actions/download-artifact@v2
         with:
-          name: spritify-common-build-${{ github.sha }}
+          name: ${{ jobs.build-common.outputs.artifact-key }}
       - name: Build Spritify.Api
+        id: build
         uses: ./.github/actions/build-dotnet
         with:
           dotnet-version: ${{ env.dotnet-version }}
@@ -61,6 +76,10 @@ jobs:
           artifact-name: spritify-api-build-${{ github.sha }}
   build-web:
     runs-on: ubuntu-latest
+    outputs:
+      artifact-key:
+        description: 'Key to the build artifact'
+        value: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
       - name: Checkout latest version
@@ -68,8 +87,9 @@ jobs:
       - name: Restore Spritify.Common
         uses: actions/download-artifact@v2
         with:
-          name: spritify-common-build-${{ github.sha }}
+          name: ${{ jobs.build-common.outputs.artifact-key }}
       - name: Build Spritify.Web (1/2)
+        id: build
         uses: ./.github/actions/build-dotnet
         with:
           dotnet-version: ${{ env.dotnet-version }}
@@ -98,7 +118,7 @@ jobs:
       - name: Restore Spritify.Api
         uses: actions/download-artifact@v2
         with:
-          name: spritify-api-build-${{ github.sha }}
+          name: ${{ jobs.build-api.outputs.artifact-key }}
       - name: Publish Spritify API
         run: |
           dotnet publish ./Spritify.Api/Spritify.Api.csproj --configuration Release --output ${{ env.output-folder }} --no-build
@@ -125,7 +145,7 @@ jobs:
       - name: Restore Spritify.Web
         uses: actions/download-artifact@v2
         with:
-          name: spritify-web-build-${{ github.sha }}
+          name: ${{ jobs.build-web.outputs.artifact-key }}
       - name: Publish Spritify Web
         run: |
           dotnet publish ./Spritify.Web/Spritify.Web.csproj --configuration Release --output ${{ env.output-folder }} --no-build
