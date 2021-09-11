@@ -13,9 +13,7 @@ jobs:
   build-common:
     runs-on: ubuntu-latest
     outputs:
-      artifact-key:
-        description: 'Key to the build artifact'
-        value: ${{ steps.build.outputs.artifact-key }}
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
@@ -31,9 +29,7 @@ jobs:
   build-testFramework:
     runs-on: ubuntu-latest
     outputs:
-      artifact-key:
-        description: 'Key to the build artifact'
-        value: ${{ steps.build.outputs.artifact-key }}
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
       - name: Checkout latest version
@@ -54,9 +50,7 @@ jobs:
   build-api:
     runs-on: ubuntu-latest
     outputs:
-      artifact-key:
-        description: 'Key to the build artifact'
-        value: ${{ steps.build.outputs.artifact-key }}
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
       - name: Checkout latest version
@@ -77,9 +71,7 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     outputs:
-      artifact-key:
-        description: 'Key to the build artifact'
-        value: ${{ steps.build.outputs.artifact-key }}
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
       - name: Checkout latest version
