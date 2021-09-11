@@ -33,8 +33,8 @@ runs:
     id: cache-key
     uses: ./.github/actions/create-cache-key
     with:
-      type: 'nuget'
-      version: ${{ inputs.nuget-cache-version }}
+      cache-type: 'nuget'
+      cache-version: ${{ inputs.nuget-cache-version }}
       artifact-name: ${{ inputs.artifact-name }}
       hash: ${{ hashFiles('**/packages.lock.json') }}
   - name: Find projects to build
