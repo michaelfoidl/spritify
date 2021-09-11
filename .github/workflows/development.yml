@@ -32,7 +32,7 @@ jobs:
       - name: Restore Spritify.Common
         uses: actions/download-artifact@v2
         with:
-          key: spritify-common-build-${{ github.sha }}
+          name: spritify-common-build-${{ github.sha }}
       - name: Build Spritify.TestFramework
         uses: ./.github/actions/build-dotnet
         with:
@@ -50,7 +50,7 @@ jobs:
       - name: Restore Spritify.Common
         uses: actions/download-artifact@v2
         with:
-          key: spritify-common-build-${{ github.sha }}
+          name: spritify-common-build-${{ github.sha }}
       - name: Build Spritify.Api
         uses: ./.github/actions/build-dotnet
         with:
@@ -68,7 +68,7 @@ jobs:
       - name: Restore Spritify.Common
         uses: actions/download-artifact@v2
         with:
-          key: spritify-common-build-${{ github.sha }}
+          name: spritify-common-build-${{ github.sha }}
       - name: Build Spritify.Web (1/2)
         uses: ./.github/actions/build-dotnet
         with:
@@ -98,7 +98,7 @@ jobs:
       - name: Restore Spritify.Api
         uses: actions/download-artifact@v2
         with:
-          key: spritify-api-build-${{ github.sha }}
+          name: spritify-api-build-${{ github.sha }}
       - name: Publish Spritify API
         run: |
           dotnet publish ./Spritify.Api/Spritify.Api.csproj --configuration Release --output ${{ env.output-folder }} --no-build
@@ -125,7 +125,7 @@ jobs:
       - name: Restore Spritify.Web
         uses: actions/download-artifact@v2
         with:
-          key: spritify-web-build-${{ github.sha }}
+          name: spritify-web-build-${{ github.sha }}
       - name: Publish Spritify Web
         run: |
           dotnet publish ./Spritify.Web/Spritify.Web.csproj --configuration Release --output ${{ env.output-folder }} --no-build
