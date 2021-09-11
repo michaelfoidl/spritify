@@ -46,7 +46,6 @@ runs:
   - name: Look for cached dependencies
     uses: actions/cache@v2
     id: npm-cache
-    working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     with:
       path: ${{ inputs.npm-cache }}
       key: ${{ steps.cache-key.outputs.key }}
