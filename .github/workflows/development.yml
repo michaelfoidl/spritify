@@ -37,7 +37,7 @@ jobs:
       - name: Restore Spritify.Common
         uses: actions/download-artifact@v2
         with:
-          name: ${{ jobs.build-common.outputs.artifact-key }}
+          name: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.TestFramework
         id: build
         uses: ./.github/actions/build-dotnet
@@ -58,7 +58,7 @@ jobs:
       - name: Restore Spritify.Common
         uses: actions/download-artifact@v2
         with:
-          name: ${{ jobs.build-common.outputs.artifact-key }}
+          name: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.Api
         id: build
         uses: ./.github/actions/build-dotnet
@@ -79,7 +79,7 @@ jobs:
       - name: Restore Spritify.Common
         uses: actions/download-artifact@v2
         with:
-          name: ${{ jobs.build-common.outputs.artifact-key }}
+          name: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.Web (1/2)
         id: build
         uses: ./.github/actions/build-dotnet
@@ -110,7 +110,7 @@ jobs:
       - name: Restore Spritify.Api
         uses: actions/download-artifact@v2
         with:
-          name: ${{ jobs.build-api.outputs.artifact-key }}
+          name: ${{ needs.build-api.outputs.artifact-key }}
       - name: Publish Spritify API
         run: |
           dotnet publish ./Spritify.Api/Spritify.Api.csproj --configuration Release --output ${{ env.output-folder }} --no-build
@@ -137,7 +137,7 @@ jobs:
       - name: Restore Spritify.Web
         uses: actions/download-artifact@v2
         with:
-          name: ${{ jobs.build-web.outputs.artifact-key }}
+          name: ${{ needs.build-web.outputs.artifact-key }}
       - name: Publish Spritify Web
         run: |
           dotnet publish ./Spritify.Web/Spritify.Web.csproj --configuration Release --output ${{ env.output-folder }} --no-build
