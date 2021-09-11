@@ -5,10 +5,8 @@ on:
 env:
   dotnet-version: '5.0.x'
   nuget-cache: ~/.nuget/packages
-  nuget-cache-version: 1
   node-version: '14.17.x'
   npm-cache: ~/.npm/packages
-  npm-cache-version: 2
 jobs:
   build-common:
     runs-on: ubuntu-latest
@@ -24,7 +22,6 @@ jobs:
           dotnet-version: ${{ env.dotnet-version }}
           root-directory: ./common
           nuget-cache: ${{ env.nuget-cache }}
-          nuget-cache-version: ${{ env.nuget-cache-version }}
           artifact-name: spritify-common-build
   build-testFramework:
     runs-on: ubuntu-latest
@@ -45,7 +42,6 @@ jobs:
           dotnet-version: ${{ env.dotnet-version }}
           root-directory: ./testFramework
           nuget-cache: ${{ env.nuget-cache }}
-          nuget-cache-version: ${{ env.nuget-cache-version }}
           artifact-name: spritify-testFramework-build
   build-api:
     runs-on: ubuntu-latest
@@ -66,7 +62,6 @@ jobs:
           dotnet-version: ${{ env.dotnet-version }}
           root-directory: ./api
           nuget-cache: ${{ env.nuget-cache }}
-          nuget-cache-version: ${{ env.nuget-cache-version }}
           artifact-name: spritify-api-build
   build-web:
     runs-on: ubuntu-latest
@@ -87,7 +82,6 @@ jobs:
           dotnet-version: ${{ env.dotnet-version }}
           root-directory: ./web
           nuget-cache: ${{ env.nuget-cache }}
-          nuget-cache-version: ${{ env.nuget-cache-version }}
           artifact-name: spritify-web-build
       - name: Build Spritify.Web (2/2)
         uses: ./.github/actions/build-node
@@ -95,7 +89,7 @@ jobs:
           node-version: ${{ env.node-version }}
           root-directory: ./web
           npm-cache: ${{ env.npm-cache }}
-          npm-cache-version: ${{ env.npm-cache-version }}
+          npm-cache-version: '2'
           artifact-name: spritify-web-build
   publish-api:
     runs-on: ubuntu-latest
