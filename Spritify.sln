@@ -3,9 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api", "api\Spritify.Api\Spritify.Api.csproj", "{C27F406E-2C02-4077-AF00-0F66F59806AF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{6987E055-90B9-458C-AB88-D9BD69FF10A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Common", "common\Spritify.Common\Spritify.Common.csproj", "{B3725C4E-7770-4467-BC74-2FCB8E4FC3B7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{BEDB5A79-A1F3-411B-9DE0-BC7FB1AD135D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api", "api\Spritify.Api\Spritify.Api.csproj", "{C27F406E-2C02-4077-AF00-0F66F59806AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{D0C1166B-B070-4A1F-84D3-3BFDF83AE557}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Common", "api\common\Spritify.Api.Common\Spritify.Api.Common.csproj", "{218817E5-C6A4-4DEE-AE8B-4463441AA2C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Common.Interfaces", "api\common\Spritify.Api.Common.Interfaces\Spritify.Api.Common.Interfaces.csproj", "{68741CCF-70F6-479D-896D-A767F1A18A06}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Common.DataTransfer", "api\common\Spritify.Api.Common.DataTransfer\Spritify.Api.Common.DataTransfer.csproj", "{6C7023D4-BB50-41EC-B12D-7A7F174898A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{08BD8FDA-95F6-4CB2-A54E-ED6F54B408AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Core", "api\core\Spritify.Api.Core\Spritify.Api.Core.csproj", "{96F8D917-9C08-46A8-BAC3-1606C9865856}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Core.Interfaces", "api\core\Spritify.Api.Core.Interfaces\Spritify.Api.Core.Interfaces.csproj", "{133E5599-02F3-4819-9F0F-70C34DF2A6F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Core.DataTransfer", "api\core\Spritify.Api.Core.Entities\Spritify.Api.Core.DataTransfer.csproj", "{1CAFA7B5-2536-4648-BFBC-EDE3534507DB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "web", "{073F7F95-17D2-42F1-BF87-828C25AB66F5}"
 EndProject
@@ -14,57 +34,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Web", "web\Spritif
 		{C27F406E-2C02-4077-AF00-0F66F59806AF} = {C27F406E-2C02-4077-AF00-0F66F59806AF}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Common", "api\common\Spritify.Api.Common\Spritify.Api.Common.csproj", "{218817E5-C6A4-4DEE-AE8B-4463441AA2C3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Core.Interfaces", "api\core\Spritify.Api.Core.Interfaces\Spritify.Api.Core.Interfaces.csproj", "{133E5599-02F3-4819-9F0F-70C34DF2A6F9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Core.DataTransfer", "api\core\Spritify.Api.Core.Entities\Spritify.Api.Core.DataTransfer.csproj", "{1CAFA7B5-2536-4648-BFBC-EDE3534507DB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Core", "api\core\Spritify.Api.Core\Spritify.Api.Core.csproj", "{96F8D917-9C08-46A8-BAC3-1606C9865856}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{08BD8FDA-95F6-4CB2-A54E-ED6F54B408AD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{D0C1166B-B070-4A1F-84D3-3BFDF83AE557}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Common.Interfaces", "api\common\Spritify.Api.Common.Interfaces\Spritify.Api.Common.Interfaces.csproj", "{68741CCF-70F6-479D-896D-A767F1A18A06}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Common.DataTransfer", "api\common\Spritify.Api.Common.DataTransfer\Spritify.Api.Common.DataTransfer.csproj", "{6C7023D4-BB50-41EC-B12D-7A7F174898A6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{6987E055-90B9-458C-AB88-D9BD69FF10A4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{92967D06-0DBD-4BD9-8025-8B29A11CE36C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Workflow", "workflow\Spritify.Workflow\Spritify.Workflow.csproj", "{5F3DD193-EC50-4BC6-82B7-D9D1B7A1A29E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7DC48C92-8F2A-48E2-B772-5F62C97D287D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testFramework", "testFramework", "{7F194102-A8E6-4177-8FFA-97A46D2B5991}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.TestFramework", "testFramework\Spritify.TestFramework\Spritify.TestFramework.csproj", "{8D78D8F9-5C63-4784-8A98-9ED26C25628C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.TestFramework.Extensions.Jwt", "testFramework\Spritify.TestFramework.Extensions.Jwt\Spritify.TestFramework.Extensions.Jwt.csproj", "{A4774F5E-3E0D-4BB2-A005-D9AC6D47A087}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Common", "common\Spritify.Common\Spritify.Common.csproj", "{B3725C4E-7770-4467-BC74-2FCB8E4FC3B7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.TestFramework.Extensions.Configuration", "testFramework\Spritify.TestFramework.Extensions.Configuration\Spritify.TestFramework.Extensions.Configuration.csproj", "{A06C9F83-A3AF-46B7-9526-B9BB7778EB0D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Workflow.Test", "workflow\Spritify.Workflow.Test\Spritify.Workflow.Test.csproj", "{42E582D5-6A55-4E17-BCF0-DAC58030E445}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.TestFramework.Extensions.Hosting", "testFramework\Spritify.TestFramework.Extensions.Hosting\Spritify.TestFramework.Extensions.Hosting.csproj", "{68F1CD12-E0E8-4CD7-A883-C271601B08E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Test.UnitTest", "test\Spritify.Test.UnitTest\Spritify.Test.UnitTest.csproj", "{6C65068B-3964-4FE1-A3DA-6C491E56E868}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Test.ComponentTest", "test\Spritify.Test.ComponentTest\Spritify.Test.ComponentTest.csproj", "{630ACEAE-CE0B-403A-98EF-51D50166E91B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Test.IntegrationTest", "test\Spritify.Test.IntegrationTest\Spritify.Test.IntegrationTest.csproj", "{75FC9E39-D232-4FCB-B1D6-4BBCE1DE67C8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testFramework", "testFramework", "{7F194102-A8E6-4177-8FFA-97A46D2B5991}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.TestFramework.Extensions.Mocking", "testFramework\Spritify.TestFramework.Extensions.Mocking\Spritify.TestFramework.Extensions.Mocking.csproj", "{DBF7B8AC-848A-4D5F-A97E-DDFFBB9FCF78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spritify.Test.ApiTest", "test\Spritify.Test.ApiTest\Spritify.Test.ApiTest.csproj", "{91363FA1-CCBC-4158-B6EE-26E5676C44A8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spritify.TestFramework.Extensions.Mocking.Autofac", "testFramework\Spritify.TestFramework.Extensions.Mocking.Autofac\Spritify.TestFramework.Extensions.Mocking.Autofac.csproj", "{1CC6029B-8D22-45EA-B181-3EA765F92CE4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spritify.Common.Autofac", "common\Spritify.Autofac\Spritify.Common.Autofac.csproj", "{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,10 +86,6 @@ Global
 		{6C7023D4-BB50-41EC-B12D-7A7F174898A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C7023D4-BB50-41EC-B12D-7A7F174898A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C7023D4-BB50-41EC-B12D-7A7F174898A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F3DD193-EC50-4BC6-82B7-D9D1B7A1A29E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F3DD193-EC50-4BC6-82B7-D9D1B7A1A29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F3DD193-EC50-4BC6-82B7-D9D1B7A1A29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F3DD193-EC50-4BC6-82B7-D9D1B7A1A29E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8D78D8F9-5C63-4784-8A98-9ED26C25628C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8D78D8F9-5C63-4784-8A98-9ED26C25628C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D78D8F9-5C63-4784-8A98-9ED26C25628C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -124,42 +102,18 @@ Global
 		{A06C9F83-A3AF-46B7-9526-B9BB7778EB0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A06C9F83-A3AF-46B7-9526-B9BB7778EB0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A06C9F83-A3AF-46B7-9526-B9BB7778EB0D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42E582D5-6A55-4E17-BCF0-DAC58030E445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42E582D5-6A55-4E17-BCF0-DAC58030E445}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42E582D5-6A55-4E17-BCF0-DAC58030E445}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42E582D5-6A55-4E17-BCF0-DAC58030E445}.Release|Any CPU.Build.0 = Release|Any CPU
 		{68F1CD12-E0E8-4CD7-A883-C271601B08E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{68F1CD12-E0E8-4CD7-A883-C271601B08E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68F1CD12-E0E8-4CD7-A883-C271601B08E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68F1CD12-E0E8-4CD7-A883-C271601B08E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C65068B-3964-4FE1-A3DA-6C491E56E868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C65068B-3964-4FE1-A3DA-6C491E56E868}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C65068B-3964-4FE1-A3DA-6C491E56E868}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C65068B-3964-4FE1-A3DA-6C491E56E868}.Release|Any CPU.Build.0 = Release|Any CPU
-		{630ACEAE-CE0B-403A-98EF-51D50166E91B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{630ACEAE-CE0B-403A-98EF-51D50166E91B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{630ACEAE-CE0B-403A-98EF-51D50166E91B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{630ACEAE-CE0B-403A-98EF-51D50166E91B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75FC9E39-D232-4FCB-B1D6-4BBCE1DE67C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75FC9E39-D232-4FCB-B1D6-4BBCE1DE67C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75FC9E39-D232-4FCB-B1D6-4BBCE1DE67C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75FC9E39-D232-4FCB-B1D6-4BBCE1DE67C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DBF7B8AC-848A-4D5F-A97E-DDFFBB9FCF78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DBF7B8AC-848A-4D5F-A97E-DDFFBB9FCF78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBF7B8AC-848A-4D5F-A97E-DDFFBB9FCF78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBF7B8AC-848A-4D5F-A97E-DDFFBB9FCF78}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91363FA1-CCBC-4158-B6EE-26E5676C44A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91363FA1-CCBC-4158-B6EE-26E5676C44A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91363FA1-CCBC-4158-B6EE-26E5676C44A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91363FA1-CCBC-4158-B6EE-26E5676C44A8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1CC6029B-8D22-45EA-B181-3EA765F92CE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1CC6029B-8D22-45EA-B181-3EA765F92CE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CC6029B-8D22-45EA-B181-3EA765F92CE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CC6029B-8D22-45EA-B181-3EA765F92CE4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,20 +129,13 @@ Global
 		{D0C1166B-B070-4A1F-84D3-3BFDF83AE557} = {BEDB5A79-A1F3-411B-9DE0-BC7FB1AD135D}
 		{68741CCF-70F6-479D-896D-A767F1A18A06} = {D0C1166B-B070-4A1F-84D3-3BFDF83AE557}
 		{6C7023D4-BB50-41EC-B12D-7A7F174898A6} = {D0C1166B-B070-4A1F-84D3-3BFDF83AE557}
-		{5F3DD193-EC50-4BC6-82B7-D9D1B7A1A29E} = {92967D06-0DBD-4BD9-8025-8B29A11CE36C}
 		{8D78D8F9-5C63-4784-8A98-9ED26C25628C} = {7F194102-A8E6-4177-8FFA-97A46D2B5991}
 		{A4774F5E-3E0D-4BB2-A005-D9AC6D47A087} = {7F194102-A8E6-4177-8FFA-97A46D2B5991}
 		{B3725C4E-7770-4467-BC74-2FCB8E4FC3B7} = {6987E055-90B9-458C-AB88-D9BD69FF10A4}
 		{A06C9F83-A3AF-46B7-9526-B9BB7778EB0D} = {7F194102-A8E6-4177-8FFA-97A46D2B5991}
-		{42E582D5-6A55-4E17-BCF0-DAC58030E445} = {92967D06-0DBD-4BD9-8025-8B29A11CE36C}
 		{68F1CD12-E0E8-4CD7-A883-C271601B08E2} = {7F194102-A8E6-4177-8FFA-97A46D2B5991}
-		{6C65068B-3964-4FE1-A3DA-6C491E56E868} = {7DC48C92-8F2A-48E2-B772-5F62C97D287D}
-		{630ACEAE-CE0B-403A-98EF-51D50166E91B} = {7DC48C92-8F2A-48E2-B772-5F62C97D287D}
-		{75FC9E39-D232-4FCB-B1D6-4BBCE1DE67C8} = {7DC48C92-8F2A-48E2-B772-5F62C97D287D}
 		{DBF7B8AC-848A-4D5F-A97E-DDFFBB9FCF78} = {7F194102-A8E6-4177-8FFA-97A46D2B5991}
-		{91363FA1-CCBC-4158-B6EE-26E5676C44A8} = {7DC48C92-8F2A-48E2-B772-5F62C97D287D}
 		{1CC6029B-8D22-45EA-B181-3EA765F92CE4} = {7F194102-A8E6-4177-8FFA-97A46D2B5991}
-		{3F83F56C-547D-4608-90A3-CD6FC1DD8D82} = {6987E055-90B9-458C-AB88-D9BD69FF10A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD304890-DEF1-462E-9016-C6FC9B72B7C6}
