@@ -26,7 +26,7 @@ runs:
       echo "::group::Create artifact key"
       if [ ${{ inputs.is-build-artifact }} == true ];
       then
-      ARTIFACT_KEY=$(echo ${{ inputs.artifact-name }}-build.${{ github.sha }});
+      ARTIFACT_KEY=$(echo ${{ inputs.artifact-name }}-build-${{ github.sha }});
       elif [ ${{ inputs.is-publish-artifact}} == true ];
       then
       ARTIFACT_KEY=$(echo ${{ inputs.artifact-name }}-${{ github.sha }});
