@@ -1,0 +1,64 @@
+name: publish-dotnet
+description: 'Publishes the given .NET project(s).'
+inputs:
+  dotnet-version:
+    description: '.NET Version to use'
+    required: true
+  root-directory:
+    description: 'Path to the root directory of the project - all projects inside this directory are published'
+    required: true
+  artifact-name:
+    description: 'Name of the build artifact'
+    required: true
+outputs:
+  artifact-key:
+    description: 'Key to the build artifact'
+    value: ${{ steps.publish-artifact-key.outputs.key }}
+env:
+  output-directory: ~/.publish
+runs:
+  using: 'composite'
+  steps:
+  - name: Setup .NET
+    uses: actions/setup-dotnet@v1
+    with:
+      dotnet-version: ${{ inputs.dotnet-version }}
+  - name: Normalize path
+    id: normalize-path
+    uses: ./.github/actions/normalize-path
+    with:
+      path: ${{ inputs.root-directory }}
+  - name: Create publish artifact key
+    id: publish-artifact-key
+    uses: ./.github/actions/create-artifact-key
+    with:
+      artifact-name: ${{ inputs.artifact-name }}
+      is-publish-artifact: true
+  - name: Create build artifact key
+    id: build-artifact-key
+    uses: ./.github/actions/create-artifact-key
+    with:
+      artifact-name: ${{ inputs.artifact-name }}
+      is-build-artifact: true
+  - name: Restore build artifact
+    uses: actions/download-artifact@v2
+    with:
+      name: ${{ steps.build-artifact-key.outputs.key }}
+  - name: Find projects to publish
+    uses: ./.github/actions/find-projects
+    id: find-projects
+    with:
+      root-directory: ${{ inputs.root-directory }}
+      project-name-schema: '*.csproj'
+  - name: Publish
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
+    run: |
+      echo "::group::Publish"
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet publish {} --configuration Release --output ${{ env.output-directory }} --no-build
+      echo "::endgroup::"
+  - name: Archive artifacts
+    uses: actions/upload-artifact@v2
+    with:
+      name: ${{ steps.publish-artifact-key.outputs.key }}
+      path: ${{ env.output-directory }}

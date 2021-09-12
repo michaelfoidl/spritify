@@ -93,58 +93,46 @@ jobs:
           artifact-name: spritify-web-build
   publish-api:
     runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.publish.outputs.artifact-key }}
     needs: build-api
-    env:
-      output-folder: ~/.publish/api
-    defaults:
-      run:
-        working-directory: ./api
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Restore Spritify.Api
         uses: actions/download-artifact@v2
         with:
           name: ${{ needs.build-api.outputs.artifact-key }}
-      - name: Publish Spritify API
-        run: |
-          dotnet publish ./Spritify.Api/Spritify.Api.csproj --configuration Release --output ${{ env.output-folder }} --no-build
-          dotnet publish ./common/Spritify.Api.Common/Spritify.Api.Common.csproj --configuration Release --output ${{ env.output-folder }} --no-build
-          dotnet publish ./common/Spritify.Api.Common.Interfaces/Spritify.Api.Common.Interfaces.csproj --configuration Release --output ${{ env.output-folder }} --no-build
-          dotnet publish ./core/Spritify.Api.Core/Spritify.Api.Core.csproj --configuration Release --output ${{ env.output-folder }} --no-build
-          dotnet publish ./core/Spritify.Api.Core.Interfaces/Spritify.Api.Core.Interfaces.csproj --configuration Release --output ${{ env.output-folder }} --no-build
-          dotnet publish ./core/Spritify.Api.Core.Entities/Spritify.Api.Core.Entities.csproj --configuration Release --output ${{ env.output-folder }} --no-build
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+      - name: Publish Spritify.Api
+        id: publish
+        uses: ./.github/actions/publish-dotnet
         with:
-          name: spritify-api-${{ github.sha }}
-          path: ${{ env.output-folder }}
+          dotnet-version: ${{ env.dotnet-version }}
+          root-directory: ./api
+          artifact-name: spritify-api
   publish-web:
     runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.publish.outputs.artifact-key }}
     needs: build-web
-    env:
-      output-folder: ~/.publish/web
-    defaults:
-      run:
-        working-directory: ./web
     steps:
       - uses: actions/checkout@v2
       - name: Restore Spritify.Web
         uses: actions/download-artifact@v2
         with:
           name: ${{ needs.build-web.outputs.artifact-key }}
-      - name: Publish Spritify Web
-        run: |
-          dotnet publish ./Spritify.Web/Spritify.Web.csproj --configuration Release --output ${{ env.output-folder }} --no-build
-      - name: Publish Spritify Web UI
-        working-directory: ./web/Spritify.Web.Ui
-        run: |
-          mkdir ${{ env.output-folder }}/wwwroot
-          cp -r ./dist/spritify/* ${{ env.output-folder }}/wwwroot
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+      - name: Publish Spritify.Web (1/2)
+        id: publish
+        uses: ./.github/actions/publish-dotnet
         with:
-          name: spritify-web-${{ github.sha }}
-          path: ${{ env.output-folder }}
+          dotnet-version: ${{ env.dotnet-version }}
+          root-directory: ./web
+          artifact-name: spritify-web
+      - name: Publish Spritify.Web (2/2)
+        uses: ./.github/actions/publish-node
+        with:
+          root-directory: ./web
+          artifact-name: spritify-web
   deploy:
     runs-on: ubuntu-latest
     needs: [ publish-api, publish-web ]
@@ -152,15 +140,15 @@ jobs:
       api-package-folder: ~/.publish/api
       web-package-folder: ~/.publish/web
     steps:
-      - name: Get Spritify API package
+      - name: Get Spritify.Api package
         uses: actions/download-artifact@v2
         with:
-          name: spritify-api-${{ github.sha }}
+          name: ${{ needs.publish-api.outputs.artifact-key }}
           path: ${{ env.api-package-folder }}
-      - name: Get Spritify Web package
+      - name: Get Spritify.Web package
         uses: actions/download-artifact@v2
         with:
-          name: spritify-web-${{ github.sha }}
+          name: ${{ needs.publish-web.outputs.artifact-key }}
           path: ${{ env.web-package-folder }}
       - name: Setup SSH
         run: |
@@ -169,12 +157,12 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github
           echo "IdentityFile ~/.ssh/github" >> ~/.ssh/config
           chmod -R 700 ~/.ssh  
-      - name: Deploy Spritify API
+      - name: Deploy Spritify.Api
         run: |
           rsync -avz -e ssh --delete ${{ env.api-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cp -r /var/www/staging/spritify/configuration/api/* /var/www/staging/spritify/api'
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '/var/www/staging/spritify/startup/api'
-      - name: Deploy Spritify Web
+      - name: Deploy Spritify.Web
         run: |
           rsync -avz -e ssh --delete ${{ env.web-package-folder }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/staging/spritify
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cp -r /var/www/staging/spritify/configuration/web/* /var/www/staging/spritify/web'
