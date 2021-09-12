@@ -99,10 +99,6 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.Api
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ needs.build-api.outputs.artifact-key }}
       - name: Publish Spritify.Api
         id: publish
         uses: ./.github/actions/publish-dotnet
@@ -117,10 +113,6 @@ jobs:
     needs: build-web
     steps:
       - uses: actions/checkout@v2
-      - name: Restore Spritify.Web
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ needs.build-web.outputs.artifact-key }}
       - name: Publish Spritify.Web (1/2)
         id: publish
         uses: ./.github/actions/publish-dotnet
