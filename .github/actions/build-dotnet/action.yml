@@ -20,7 +20,7 @@ inputs:
 outputs:
   artifact-key:
     description: 'Key to the build artifact'
-    value: ${{ inputs.artifact-name }}-${{ github.sha }}
+    value: ${{ steps.artifact-key.outputs.key }}
 runs:
   using: 'composite'
   steps:
@@ -41,6 +41,12 @@ runs:
       cache-version: ${{ inputs.nuget-cache-version }}
       artifact-name: ${{ inputs.artifact-name }}
       hash-glob: ${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/packages.lock.json
+  - name: Create artifact key
+    id: artifact-key
+    uses: ./.github/actions/create-artifact-key
+    with:
+      artifact-name: ${{ inputs.artifact-name }}
+      is-build-artifact: true
   - name: Find projects to build
     uses: ./.github/actions/find-projects
     id: find-projects
@@ -81,7 +87,7 @@ runs:
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
     with:
-      name: ${{ inputs.artifact-name }}-${{ github.sha }}
+      name: ${{ steps.artifact-key.outputs.key }}
       path: |
         ${{ github.workspace }}/**/bin
         ${{ github.workspace }}/**/obj
