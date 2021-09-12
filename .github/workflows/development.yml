@@ -90,7 +90,7 @@ jobs:
           root-directory: ./web
           npm-cache: ${{ env.npm-cache }}
           npm-cache-version: '2'
-          artifact-name: spritify-webs
+          artifact-name: spritify-web
   publish-api:
     runs-on: ubuntu-latest
     outputs:
