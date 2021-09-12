@@ -29,11 +29,11 @@ runs:
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Find projects"
-      if [ ${{ inputs.test-projects }} == "true" ];
+      if [ ${{ inputs.test-projects }} == true ];
       then
       echo "Mode: test projects only";
       PROJECTS=$(find . -type f -name ${{ inputs.project-name-schema }} -iname "*test*"| tr "\n" " ");
-      elif [ ${{ inputs.test-projects }} == "false" ];
+      elif [ ${{ inputs.test-projects }} == false ];
       then
       echo "Mode: non-test projects only";
       PROJECTS=$(find . -type f -name ${{ inputs.project-name-schema }} ! -iname "*test*" | tr "\n" " ");
