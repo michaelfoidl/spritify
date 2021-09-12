@@ -14,8 +14,6 @@ outputs:
   artifact-key:
     description: 'Key to the build artifact'
     value: ${{ steps.publish-artifact-key.outputs.key }}
-env:
-  output-directory: ~/.publish
 runs:
   using: 'composite'
   steps:
@@ -55,10 +53,10 @@ runs:
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Publish"
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet publish {} --configuration Release --output ${{ env.output-directory }} --no-build
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet publish {} --configuration Release --output ~/.publish --no-build
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
     with:
       name: ${{ steps.publish-artifact-key.outputs.key }}
-      path: ${{ env.output-directory }}
+      path: ~/.publish

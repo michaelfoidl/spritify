@@ -11,8 +11,6 @@ outputs:
   artifact-key:
     description: 'Key to the build artifact'
     value: ${{ steps.publish-artifact-key.outputs.key }}
-env:
-  output-directory: ~/.publish
 runs:
   using: 'composite'
   steps:
@@ -42,11 +40,11 @@ runs:
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Publish"
-      mkdir ${{ env.output-folder }}/wwwroot
-      echo find . -type d -name "dist" | xargs -I {} cp -r {}/*/* ${{ env.output-folder }}/wwwroot
+      mkdir ~/.publish/wwwroot
+      echo find . -type d -name "dist" | xargs -I {} cp -r {}/*/* ~/.publish/wwwroot
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
     with:
       name: ${{ steps.publish-artifact-key.outputs.key }}
-      path: ${{ env.output-directory }}
+      path: ~/.publish
