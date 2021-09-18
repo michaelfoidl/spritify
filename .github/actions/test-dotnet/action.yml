@@ -1,0 +1,57 @@
+name: test-dotnet
+description: 'Executes the tests inside the given .NET project(s).'
+inputs:
+  dotnet-version:
+    description: '.NET Version to use'
+    required: true
+  root-directory:
+    description: 'Path to the root directory of the project - all tests of all projects inside this directory are run'
+    required: true
+  artifact-name:
+    description: 'Name of the test report artifact'
+    required: true
+  test-category:
+    description: 'If set to a value, only tests of that category are executed. Otherwise, all tests are run.'
+    required: false
+    default: ''
+outputs:
+  artifact-key:
+    description: 'Key to the test report artifact'
+    value: ${{ steps.artifact-key.outputs.key }}
+runs:
+  using: 'composite'
+  steps:
+  - name: Setup .NET
+    uses: actions/setup-dotnet@v1
+    with:
+      dotnet-version: ${{ inputs.dotnet-version }}
+  - name: Normalize path
+    id: normalize-path
+    uses: ./.github/actions/normalize-path
+    with:
+      path: ${{ inputs.root-directory }}
+  - name: Create artifact key
+    id: artifact-key
+    uses: ./.github/actions/create-artifact-key
+    with:
+      artifact-name: ${{ inputs.artifact-name }}
+      is-test-artifact: true
+  - name: Find projects to build
+    uses: ./.github/actions/find-projects
+    id: find-projects
+    with:
+      root-directory: ${{ inputs.root-directory }}
+      project-name-schema: '*.csproj'
+      test-projects: true
+  - name: Test
+    shell: bash
+    working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
+    run: |
+      echo "::group::Build"
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet test {} --filter TestCategory=${{ inputs.test-category }} --configuration Release --no-build --verbosity normal --results-directory ~/.test --logger "html;LogFileName=$(echo {} | sed "s/[A-Za-z0-9\/-\.]*\///" | set "s/.csproj/.html/")" 
+      echo "::endgroup::"
+  - name: Archive artifacts
+    uses: actions/upload-artifact@v2
+    with:
+      name: ${{ steps.artifact-key.outputs.key }}
+      path: ~/.test

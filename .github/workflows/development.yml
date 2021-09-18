@@ -137,6 +137,26 @@ jobs:
           nuget-cache: ${{ env.nuget-cache }}
           artifact-name: spritify-workflow-test
           test-projects: true
+  test-workflow:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.test.outputs.artifact-key }}
+    needs: build-workflow-test
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Restore Spritify.Workflow.Test
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.build-workflow-test.outputs.artifact-key }}
+      - name: UnitTest Spritify.Workflow
+        id: test
+        uses: ./.github/actions/test-dotnet
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          root-directory: ./workflow
+          artifact-name: spritify-workflow
+          test-category: UnitTest
   publish-api:
     runs-on: ubuntu-latest
     outputs:
