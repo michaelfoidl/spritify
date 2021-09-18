@@ -12,6 +12,10 @@ inputs:
     description: 'Indicates whether the artifact is the result of a publish operation'
     required: false
     default: false
+  is-test-artifact:
+    description: 'Indicates whether the artifact is the result of a test operation'
+    required: false
+    default: false
 outputs:
   key:
     description: 'The artifact key'
@@ -27,9 +31,12 @@ runs:
       if [ ${{ inputs.is-build-artifact }} == true ];
       then
       ARTIFACT_KEY=$(echo ${{ inputs.artifact-name }}-build-${{ github.sha }});
-      elif [ ${{ inputs.is-publish-artifact}} == true ];
+      elif [ ${{ inputs.is-publish-artifact }} == true ];
       then
       ARTIFACT_KEY=$(echo ${{ inputs.artifact-name }}-${{ github.sha }});
+      elif [ ${{ inputs.is-test-artifact }} == true ];
+      then
+      ARTIFACT_KEY=$(echo ${{ inputs.artifact-name }}-test-${{ github.sha }});
       else
       echo "The artifact to be named needs to be either a build artifact or a publish artifact." 1>&2;
       exit 2;
