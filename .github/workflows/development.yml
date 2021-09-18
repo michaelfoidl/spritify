@@ -43,6 +43,27 @@ jobs:
           root-directory: ./testFramework
           nuget-cache: ${{ env.nuget-cache }}
           artifact-name: spritify-testFramework
+  build-workflow:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    needs: build-common
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Restore Spritify.Common
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.build-common.outputs.artifact-key }}
+      - name: Build Spritify.Workflow
+        id: build
+        uses: ./.github/actions/build-dotnet
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          root-directory: ./workflow
+          nuget-cache: ${{ env.nuget-cache }}
+          artifact-name: spritify-workflow
+          test-projects: false
   build-api:
     runs-on: ubuntu-latest
     outputs:
@@ -91,6 +112,31 @@ jobs:
           npm-cache: ${{ env.npm-cache }}
           npm-cache-version: '2'
           artifact-name: spritify-web
+  build-workflow-test:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    needs: [ build-testFramework, build-workflow ]
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Restore Spritify.TestFramework
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.build-testFramework.outputs.artifact-key }}
+      - name: Restore Spritify.Workflow
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.build-workflow.outputs.artifact-key }}
+      - name: Build Spritify.Workflow.Test
+        id: build
+        uses: ./.github/actions/build-dotnet
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          root-directory: ./workflow
+          nuget-cache: ${{ env.nuget-cache }}
+          artifact-name: spritify-workflow-test
+          test-projects: true
   publish-api:
     runs-on: ubuntu-latest
     outputs:
