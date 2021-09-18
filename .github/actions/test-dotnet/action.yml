@@ -47,8 +47,8 @@ runs:
     shell: bash
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
-      echo "::group::Build"
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet test {} --filter TestCategory=${{ inputs.test-category }} --configuration Release --no-build --verbosity normal --results-directory ~/.test --logger "html;LogFileName=$(echo {} | sed "s/[A-Za-z0-9\/-\.]*\///" | set "s/.csproj/.html/")" 
+      echo "::group::Test"
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet test {} --filter TestCategory=${{ inputs.test-category }} --configuration Release --no-build --verbosity normal --results-directory ~/.test --logger "html;LogFileName=$(echo {} | sed 's/[A-Za-z0-9\/-\.]*\///' | sed 's/csproj/html/')"
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
