@@ -41,7 +41,7 @@ runs:
     run: |
       echo "::group::Publish"
       mkdir ~/.publish/wwwroot
-      find . -type d -name "dist" | xargs -I {} cp -r {}/* ~/.publish/wwwroot
+      find . -type d -name "dist" | xargs -I {} cp -r {} ~/.publish/wwwroot
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
