@@ -17,6 +17,10 @@ inputs:
   artifact-name:
     description: 'Name of the build artifact'
     required: true
+  test-projects:
+    description: 'If set to true, only test projects are built. If set to false, all projects except test projects are built. If not set, all projects are built.'
+    required: false
+    default: ''
 outputs:
   artifact-key:
     description: 'Key to the build artifact'
@@ -53,6 +57,7 @@ runs:
     with:
       root-directory: ${{ inputs.root-directory }}
       project-name-schema: '*.csproj'
+      test-projects: ${{ inputs.test-projects }}
   - name: Look for cached dependencies
     uses: actions/cache@v2
     id: nuget-cache
