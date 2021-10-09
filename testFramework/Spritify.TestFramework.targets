@@ -1,5 +1,9 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
   <ItemGroup>
     <!--Necessary for NUnit to recognize tests without directly using NUnit's attributes-->
     <AssemblyAttribute Include="NUnit.Framework.DescriptionAttribute">
