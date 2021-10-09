@@ -48,10 +48,12 @@ runs:
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Test"
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs /bin/sh -c 'dotnet test $0 --configuration Release --no-build --verbosity normal --results-directory ~/.test --logger \"html;LogFileName=$(echo $0 | sed "s/[A-Za-z0-9\/\-\.]*\///g" | sed "s/csproj/html/")\"'
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs /bin/sh -c 'dotnet test $0 --configuration Release --no-build --verbosity normal --results-directory ~/.test --logger \"trx;LogFileName=$(echo $0 | sed "s/[A-Za-z0-9\/\-\.]*\///g" | sed "s/csproj/trx/")\"'
       echo "::endgroup::"
-  - name: Archive artifacts
-    uses: actions/upload-artifact@v2
+  - name: Process test results
+    uses: dorny/test-reporter@v1
+    if: success() || failure()
     with:
-      name: ${{ steps.artifact-key.outputs.key }}
+      name: Test Report
       path: ~/.test
+      reporter: dotnet-trx
