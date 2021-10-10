@@ -210,7 +210,7 @@ jobs:
         if: always()
         with:
           name: Test Results
-          path: ${{ env.test-results-folder }}/**.trx
+          path: ${{ env.test-results-folder }}/**/*.trx
           reporter: dotnet-trx
   deploy:
     runs-on: ubuntu-latest
