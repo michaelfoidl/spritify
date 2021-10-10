@@ -198,10 +198,12 @@ jobs:
     env:
       test-results-folder: ~/.test
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Restore Spritify.Workflow.Test results
         uses: actions/download-artifact@v2
         with:
-          name: ${{ needs.test.workflow.outputs.artifact-key }}
+          name: ${{ needs.test-workflow.outputs.artifact-key }}
           path : ${{ env.test-results-folder }}
       - name: Publish test results
         uses: dorny/test-reporter@v1
