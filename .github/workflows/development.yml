@@ -1,7 +1,7 @@
 name: development
 on:
   push:
-    branches: [ development ]
+    branches: [ build-improvements ]
 env:
   dotnet-version: '5.0.x'
   nuget-cache: ~/.nuget/packages
@@ -32,9 +32,10 @@ jobs:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.Common
-        uses: actions/download-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: ${{ needs.build-common.outputs.artifact-key }}
+          path: .
+          key: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.TestFramework
         id: build
         uses: ./.github/actions/build-dotnet
@@ -52,9 +53,10 @@ jobs:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.Common
-        uses: actions/download-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: ${{ needs.build-common.outputs.artifact-key }}
+          path: .
+          key: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.Workflow
         id: build
         uses: ./.github/actions/build-dotnet
@@ -73,9 +75,10 @@ jobs:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.Common
-        uses: actions/download-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: ${{ needs.build-common.outputs.artifact-key }}
+          path: .
+          key: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.Api
         id: build
         uses: ./.github/actions/build-dotnet
@@ -93,9 +96,10 @@ jobs:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.Common
-        uses: actions/download-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: ${{ needs.build-common.outputs.artifact-key }}
+          path: .
+          key: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.Web (1/2)
         id: build
         uses: ./.github/actions/build-dotnet
@@ -121,13 +125,15 @@ jobs:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.TestFramework
-        uses: actions/download-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: ${{ needs.build-testFramework.outputs.artifact-key }}
+          path: .
+          key: ${{ needs.build-testFramework.outputs.artifact-key }}
       - name: Restore Spritify.Workflow
-        uses: actions/download-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: ${{ needs.build-workflow.outputs.artifact-key }}
+          path: .
+          key: ${{ needs.build-workflow.outputs.artifact-key }}
       - name: Build Spritify.Workflow.Test
         id: build
         uses: ./.github/actions/build-dotnet
@@ -146,9 +152,10 @@ jobs:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.Workflow.Test
-        uses: actions/download-artifact@v2
+        uses: actions/cache@v2
         with:
-          name: ${{ needs.build-workflow-test.outputs.artifact-key }}
+          path: .
+          key: ${{ needs.build-workflow-test.outputs.artifact-key }}
       - name: UnitTest Spritify.Workflow
         id: test
         uses: ./.github/actions/test-dotnet

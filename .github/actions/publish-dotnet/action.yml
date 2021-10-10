@@ -39,9 +39,10 @@ runs:
       artifact-name: ${{ inputs.artifact-name }}
       is-build-artifact: true
   - name: Restore build artifact
-    uses: actions/download-artifact@v2
+    uses: actions/cache@v2
     with:
-      name: ${{ steps.build-artifact-key.outputs.key }}
+      path: .
+      key: ${{ steps.build-artifact-key.outputs.key }}
   - name: Find projects to publish
     uses: ./.github/actions/find-projects
     id: find-projects

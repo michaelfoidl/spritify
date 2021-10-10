@@ -51,6 +51,13 @@ runs:
     with:
       artifact-name: ${{ inputs.artifact-name }}
       is-build-artifact: true
+  - name: Initialize artifact cache
+    uses: actions/cache@v2
+    with:
+      path: |
+        ${{ github.workspace }}/**/bin
+        ${{ github.workspace }}/**/obj
+      key: ${{ steps.artifact-key.outputs.key }}
   - name: Find projects to build
     uses: ./.github/actions/find-projects
     id: find-projects
@@ -89,10 +96,3 @@ runs:
       echo "::group::Build"
       echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ${{ inputs.nuget-cache }}
       echo "::endgroup::"
-  - name: Archive artifacts
-    uses: actions/upload-artifact@v2
-    with:
-      name: ${{ steps.artifact-key.outputs.key }}
-      path: |
-        ${{ github.workspace }}/**/bin
-        ${{ github.workspace }}/**/obj
