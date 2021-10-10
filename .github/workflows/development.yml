@@ -207,7 +207,7 @@ jobs:
           path : ${{ env.test-results-folder }}
       - name: Publish test results
         uses: dorny/test-reporter@v1
-        if: success() | failure()
+        if: success() || failure()
         with:
           name: Test Results
           path: ${{ env.test-results-folder }}/**/*.trx
