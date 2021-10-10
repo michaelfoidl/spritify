@@ -48,7 +48,7 @@ runs:
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Test"
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs /bin/sh -c 'dotnet test $0 --configuration Release --no-build --verbosity normal --results-directory ~/.test --logger \"trx;LogFileName=myResults.trx\"'
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs /bin/sh -c 'dotnet test $0 --configuration Release --no-build --verbosity normal --results-directory ~/.test --logger "trx;LogFileName=myResults.trx"'
       echo "::endgroup::"
   - name: Archive artifacts
     uses: actions/upload-artifact@v2
