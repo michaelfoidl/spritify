@@ -207,6 +207,7 @@ jobs:
           path : ${{ env.test-results-folder }}
       - name: Publish test results
         uses: dorny/test-reporter@v1
+        if: always()
         with:
           name: Test Results
           path: ${{ env.test-results-folder }}/**.trx
