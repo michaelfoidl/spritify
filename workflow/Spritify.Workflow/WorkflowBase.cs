@@ -4,20 +4,15 @@ namespace Spritify.Workflow
 {
     public abstract class WorkflowBase
     {
-        public void Setup(IWorkflowContextComposerProvider contextComposerProvider)
+        public IWorkflowManager Create(IWorkflowContextComposerProvider contextComposerProvider)
         {
             var workflowBuilder = new WorkflowDefinitionBuilder();
             Configure(workflowBuilder);
             var workflow = workflowBuilder.Build();
 
             var workflowManager = new WorkflowManager(workflow, contextComposerProvider);
-            Register(workflowManager);
+            return workflowManager;
         }
-
-        /// <summary>
-        /// Registers the provided instance of IWorkflowManager as singleton.
-        /// </summary>
-        protected abstract void Register(IWorkflowManager workflowManager);
 
         /// <summary>
         /// Configures the workflow.
