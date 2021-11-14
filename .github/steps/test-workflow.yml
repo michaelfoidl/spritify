@@ -1,0 +1,30 @@
+name: test-workflow
+description: 'Tests Spritify.Workflow'
+inputs:
+  dotnet-version:
+    description: '.NET Version to use'
+    required: true
+  build-workflow-test-artifact-key:
+    description: 'Artifact key of the build-workflow step'
+    required: true
+outputs:
+  artifact-key:
+    description: 'Key to the build artifact'
+    value: ${{ steps.test.outputs.artifact-key }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout latest version
+      uses: actions/checkout@v2
+    - name: Restore Spritify.Workflow.Test
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ inputs.build-workflow-test-artifact-key }}
+    - name: UnitTest Spritify.Workflow
+      id: test
+      uses: ${{ github.workspace }}/.github/actions/test-dotnet
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+        root-directory: ./workflow
+        artifact-name: spritify-workflow
+        test-category: UnitTest

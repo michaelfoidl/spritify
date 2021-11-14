@@ -1,0 +1,27 @@
+name: publish-web
+description: 'Publishes Spritify.Web'
+inputs:
+  dotnet-version:
+    description: '.NET Version to use'
+    required: true
+outputs:
+  artifact-key:
+    description: 'Key to the build artifact'
+    value: ${{ steps.publish.outputs.artifact-key }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout latest version
+      uses: actions/checkout@v2
+    - name: Publish Spritify.Web (1/2)
+      id: publish
+      uses: ${{ github.workspace }}/.github/actions/publish-dotnet
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+        root-directory: ./web
+        artifact-name: spritify-web
+    - name: Publish Spritify.Web (2/2)
+      uses: ${{ github.workspace }}/.github/actions/publish-node
+      with:
+        root-directory: ./web
+        artifact-name: spritify-web

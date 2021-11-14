@@ -1,0 +1,29 @@
+name: build-testFramework
+description: 'Builds Spritify.TestFramework'
+inputs:
+  dotnet-version:
+    description: '.NET Version to use'
+    required: true
+  build-common-artifact-key:
+    description: 'Artifact key of the build-common step'
+    required: true
+outputs:
+  artifact-key:
+    description: 'Key to the build artifact'
+    value: ${{ steps.build.outputs.key }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout latest version
+      uses: actions/checkout@v2
+    - name: Restore Spritify.Common
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ inputs.build-common-artifact-key }}
+    - name: Build Spritify.TestFramework
+      id: build
+      uses: ${{ github.workspace }}/.github/actions/build-dotnet
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+        root-directory: ./testFramework
+        artifact-name: spritify-testFramework
