@@ -1,0 +1,21 @@
+name: publish-testResults
+description: 'Publishes test results'
+inputs:
+  test-workflow-artifact-key:
+    description: 'Artifact key of the test-workflow step'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Restore Spritify.Workflow.Test testing results
+      uses: actions/cache@v2
+      with:
+        path: .
+        key: ${{ inputs.test-workflow-artifact-key }}
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Test Results
+        path: ./**/*.trx
+        reporter: dotnet-trx

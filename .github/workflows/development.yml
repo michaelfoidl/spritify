@@ -4,9 +4,7 @@ on:
     branches: [ build-improvements ]
 env:
   dotnet-version: '5.0.x'
-  nuget-cache: ~/.nuget/packages
   node-version: '14.17.x'
-  npm-cache: ~/.npm/packages
 jobs:
   build-common:
     runs-on: ubuntu-latest
@@ -17,12 +15,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Build Spritify.Common
         id: build
-        uses: ./.github/actions/build-dotnet
+        uses: ./.github/steps/build-common
         with:
           dotnet-version: ${{ env.dotnet-version }}
-          root-directory: ./common
-          nuget-cache: ${{ env.nuget-cache }}
-          artifact-name: spritify-common
   build-testFramework:
     runs-on: ubuntu-latest
     outputs:
@@ -31,19 +26,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.Common
-        uses: actions/cache@v2
-        with:
-          path: .
-          key: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.TestFramework
         id: build
-        uses: ./.github/actions/build-dotnet
+        uses: ./.github/steps/build-testFramework
         with:
           dotnet-version: ${{ env.dotnet-version }}
-          root-directory: ./testFramework
-          nuget-cache: ${{ env.nuget-cache }}
-          artifact-name: spritify-testFramework
+          build-common-artifact-key: ${{ needs.build-common.outputs.artifact-key }}
   build-workflow:
     runs-on: ubuntu-latest
     outputs:
@@ -52,20 +40,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.Common
-        uses: actions/cache@v2
-        with:
-          path: .
-          key: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.Workflow
         id: build
-        uses: ./.github/actions/build-dotnet
+        uses: ./.github/steps/build-workflow
         with:
           dotnet-version: ${{ env.dotnet-version }}
-          root-directory: ./workflow
-          nuget-cache: ${{ env.nuget-cache }}
-          artifact-name: spritify-workflow
-          test-projects: false
+          build-common-artifact-key: ${{ needs.build-common.outputs.artifact-key }}
   build-api:
     runs-on: ubuntu-latest
     outputs:
@@ -74,19 +54,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.Common
-        uses: actions/cache@v2
-        with:
-          path: .
-          key: ${{ needs.build-common.outputs.artifact-key }}
       - name: Build Spritify.Api
         id: build
-        uses: ./.github/actions/build-dotnet
+        uses: ./.github/steps/build-api
         with:
           dotnet-version: ${{ env.dotnet-version }}
-          root-directory: ./api
-          nuget-cache: ${{ env.nuget-cache }}
-          artifact-name: spritify-api
+          build-common-artifact-key: ${{ needs.build-common.outputs.artifact-key }}
   build-web:
     runs-on: ubuntu-latest
     outputs:
@@ -95,27 +68,13 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.Common
-        uses: actions/cache@v2
-        with:
-          path: .
-          key: ${{ needs.build-common.outputs.artifact-key }}
-      - name: Build Spritify.Web (1/2)
+      - name: Build Spritify.Web
         id: build
-        uses: ./.github/actions/build-dotnet
+        uses: ./.github/steps/build-web
         with:
           dotnet-version: ${{ env.dotnet-version }}
-          root-directory: ./web
-          nuget-cache: ${{ env.nuget-cache }}
-          artifact-name: spritify-web
-      - name: Build Spritify.Web (2/2)
-        uses: ./.github/actions/build-node
-        with:
           node-version: ${{ env.node-version }}
-          root-directory: ./web
-          npm-cache: ${{ env.npm-cache }}
-          npm-cache-version: '2'
-          artifact-name: spritify-web
+          build-common-artifact-key: ${{ needs.build-common.outputs.artifact-key }}
   build-workflow-test:
     runs-on: ubuntu-latest
     outputs:
@@ -124,25 +83,13 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.TestFramework
-        uses: actions/cache@v2
-        with:
-          path: .
-          key: ${{ needs.build-testFramework.outputs.artifact-key }}
-      - name: Restore Spritify.Workflow
-        uses: actions/cache@v2
-        with:
-          path: .
-          key: ${{ needs.build-workflow.outputs.artifact-key }}
       - name: Build Spritify.Workflow.Test
         id: build
-        uses: ./.github/actions/build-dotnet
+        uses: ./.github/steps/build-workflow-test
         with:
           dotnet-version: ${{ env.dotnet-version }}
-          root-directory: ./workflow
-          nuget-cache: ${{ env.nuget-cache }}
-          artifact-name: spritify-workflow-test
-          test-projects: true
+          build-testFramework-artifact-key: ${{ needs.build-testFramework.outputs.artifact-key }}
+          build-workflow-artifact-key: ${{ needs.build-workflow.outputs.artifact-key }}
   test-workflow:
     runs-on: ubuntu-latest
     outputs:
@@ -151,19 +98,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-      - name: Restore Spritify.Workflow.Test
-        uses: actions/cache@v2
-        with:
-          path: .
-          key: ${{ needs.build-workflow-test.outputs.artifact-key }}
       - name: UnitTest Spritify.Workflow
         id: test
-        uses: ./.github/actions/test-dotnet
+        uses: ./.github/steps/test-workflow
         with:
           dotnet-version: ${{ env.dotnet-version }}
-          root-directory: ./workflow
-          artifact-name: spritify-workflow
-          test-category: UnitTest
+          build-workflow-test-artifact-key: ${{ needs.build-workflow-test.outputs.artifact-key }}
   publish-api:
     runs-on: ubuntu-latest
     outputs:
@@ -174,51 +114,33 @@ jobs:
         uses: actions/checkout@v2
       - name: Publish Spritify.Api
         id: publish
-        uses: ./.github/actions/publish-dotnet
+        uses: ./.github/steps/publish-api
         with:
           dotnet-version: ${{ env.dotnet-version }}
-          root-directory: ./api
-          artifact-name: spritify-api
   publish-web:
     runs-on: ubuntu-latest
     outputs:
       artifact-key: ${{ steps.publish.outputs.artifact-key }}
     needs: build-web
     steps:
-      - uses: actions/checkout@v2
-      - name: Publish Spritify.Web (1/2)
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Publish Spritify.Web
         id: publish
-        uses: ./.github/actions/publish-dotnet
+        uses: ./.github/steps/publish-web
         with:
           dotnet-version: ${{ env.dotnet-version }}
-          root-directory: ./web
-          artifact-name: spritify-web
-      - name: Publish Spritify.Web (2/2)
-        uses: ./.github/actions/publish-node
-        with:
-          root-directory: ./web
-          artifact-name: spritify-web
-  publish-test-results:
+  publish-testResults:
     runs-on: ubuntu-latest
     needs: test-workflow
     if: always()
-    env:
-      test-results-folder: .
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
       - name: Restore Spritify.Workflow.Test results
-        uses: actions/download-artifact@v2
+        uses: ./.github/steps/publish-testResults
         with:
-          name: ${{ needs.test-workflow.outputs.artifact-key }}
-          path : ${{ env.test-results-folder }}
-      - name: Publish test results
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
-        with:
-          name: Test Results
-          path: ${{ env.test-results-folder }}/**/*.trx
-          reporter: dotnet-trx
+          test-workflow-artifact-key: ${{ needs.test-workflow.outputs.artifact-key }}
   deploy:
     runs-on: ubuntu-latest
     needs: [ publish-api, publish-web ]

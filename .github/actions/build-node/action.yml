@@ -7,9 +7,6 @@ inputs:
   root-directory:
     description: 'Path to the root directory of the project - all projects inside this directory are built'
     required: true
-  npm-cache:
-    description: 'Path to the directory where npm packages are stored (absolute)'
-    required: true
   npm-cache-version:
     description: 'Version of the npm cache - changing the version allows cache invalidation without making changes to the source code'
     required: false
@@ -63,7 +60,7 @@ runs:
     uses: actions/cache@v2
     id: npm-cache
     with:
-      path: ${{ inputs.npm-cache }}
+      path: ~/.npm/packages
       key: ${{ steps.cache-key.outputs.key }}
   - name: Analyze Cache
     shell: bash
@@ -85,11 +82,11 @@ runs:
       then
       :
       else
-      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} mkdir -p ${{ inputs.npm-cache }}/{};
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} cp {} ${{ inputs.npm-cache }}/{};
-      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ${{ inputs.npm-cache }}/{} install ${{ inputs.npm-cache }}/{};
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} mkdir -p ~/.npm/packages/{};
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} cp {} ~/.npm/packages/{};
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} npm --prefix ~/.npm/packages/{} install ~/.npm/packages/{};
       fi
-      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} cp -r ${{ inputs.npm-cache }}/{}/node_modules {}
+      echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} cp -r ~/.npm/packages/{}/node_modules {}
       echo "Packages collected successfully."
       echo "::endgroup::"
   - name: Build
