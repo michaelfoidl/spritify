@@ -1,0 +1,37 @@
+name: build-web
+description: 'Builds Spritify.Web'
+inputs:
+  dotnet-version:
+    description: '.NET Version to use'
+    required: true
+  node-version:
+    description: 'Node.js Version to use'
+    required: true
+  build-common-artifact-key:
+    description: 'Artifact key of the build-common step'
+    required: true
+outputs:
+  artifact-key:
+    description: 'Key to the build artifact'
+    value: ${{ steps.build.outputs.artifact-key }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Restore Spritify.Common
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ inputs.build-common-artifact-key }}
+    - name: Build Spritify.Web (1/2)
+      id: build
+      uses: ./.github/actions/build-dotnet
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+        root-directory: ./web
+        artifact-name: spritify-web
+    - name: Build Spritify.Web (2/2)
+      uses: ./.github/actions/build-node
+      with:
+        node-version: ${{ inputs.node-version }}
+        root-directory: ./web
+        npm-cache-version: '2'
+        artifact-name: spritify-web
