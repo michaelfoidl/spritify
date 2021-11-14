@@ -14,8 +14,6 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout latest version
-      uses: actions/checkout@v2
     - name: Restore Spritify.Workflow.Test
       uses: actions/download-artifact@v2
       with:

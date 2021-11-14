@@ -11,6 +11,8 @@ jobs:
     outputs:
       artifact-key: ${{ steps.build.outputs.artifact-key }}
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Build Spritify.Common
         id: build
         uses: ./.github/steps/build-common
@@ -22,6 +24,8 @@ jobs:
       artifact-key: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Build Spritify.TestFramework
         id: build
         uses: ./.github/steps/build-testFramework
@@ -34,6 +38,8 @@ jobs:
       artifact-key: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Build Spritify.Workflow
         id: build
         uses: ./.github/steps/build-workflow
@@ -46,6 +52,8 @@ jobs:
       artifact-key: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Build Spritify.Api
         id: build
         uses: ./.github/steps/build-api
@@ -58,6 +66,8 @@ jobs:
       artifact-key: ${{ steps.build.outputs.artifact-key }}
     needs: build-common
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Build Spritify.Web
         id: build
         uses: ./.github/steps/build-web
@@ -71,6 +81,8 @@ jobs:
       artifact-key: ${{ steps.build.outputs.artifact-key }}
     needs: [ build-testFramework, build-workflow ]
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Build Spritify.Workflow.Test
         id: build
         uses: ./.github/steps/build-workflow-test
@@ -84,6 +96,8 @@ jobs:
       artifact-key: ${{ steps.test.outputs.artifact-key }}
     needs: build-workflow-test
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: UnitTest Spritify.Workflow
         id: test
         uses: ./.github/steps/test-workflow
@@ -96,6 +110,8 @@ jobs:
       artifact-key: ${{ steps.publish.outputs.artifact-key }}
     needs: build-api
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Publish Spritify.Api
         id: publish
         uses: ./.github/steps/publish-api
@@ -107,6 +123,8 @@ jobs:
       artifact-key: ${{ steps.publish.outputs.artifact-key }}
     needs: build-web
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Publish Spritify.Web
         id: publish
         uses: ./.github/steps/publish-web
@@ -117,6 +135,8 @@ jobs:
     needs: test-workflow
     if: always()
     steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
       - name: Restore Spritify.Workflow.Test results
         uses: ./.github/steps/publish-testResults
         with:
