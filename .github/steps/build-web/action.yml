@@ -23,13 +23,13 @@ runs:
         name: ${{ inputs.build-common-artifact-key }}
     - name: Build Spritify.Web (1/2)
       id: build
-      uses: ${{ github.workspace }}/.github/actions/build-dotnet
+      uses: ./.github/actions/build-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         root-directory: ./web
         artifact-name: spritify-web
     - name: Build Spritify.Web (2/2)
-      uses: ${{ github.workspace }}/.github/actions/build-node
+      uses: ./.github/actions/build-node
       with:
         node-version: ${{ inputs.node-version }}
         root-directory: ./web

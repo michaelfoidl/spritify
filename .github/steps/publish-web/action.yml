@@ -13,13 +13,13 @@ runs:
   steps:
     - name: Publish Spritify.Web (1/2)
       id: publish
-      uses: ${{ github.workspace }}/.github/actions/publish-dotnet
+      uses: ./.github/actions/publish-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         root-directory: ./web
         artifact-name: spritify-web
     - name: Publish Spritify.Web (2/2)
-      uses: ${{ github.workspace }}/.github/actions/publish-node
+      uses: ./.github/actions/publish-node
       with:
         root-directory: ./web
         artifact-name: spritify-web

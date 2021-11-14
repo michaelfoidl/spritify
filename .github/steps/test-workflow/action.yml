@@ -20,7 +20,7 @@ runs:
         name: ${{ inputs.build-workflow-test-artifact-key }}
     - name: UnitTest Spritify.Workflow
       id: test
-      uses: ${{ github.workspace }}/.github/actions/test-dotnet
+      uses: ./.github/actions/test-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         root-directory: ./workflow

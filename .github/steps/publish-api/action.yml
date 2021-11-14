@@ -13,7 +13,7 @@ runs:
   steps:
     - name: Publish Spritify.Api
       id: publish
-      uses: ${{ github.workspace }}/.github/actions/publish-dotnet
+      uses: ./.github/actions/publish-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         root-directory: ./api
