@@ -34,14 +34,6 @@ runs:
     uses: ./.github/actions/normalize-path
     with:
       path: ${{ inputs.root-directory }}
-  - name: Create cache key
-    id: cache-key
-    uses: ./.github/actions/create-cache-key
-    with:
-      cache-type: 'nuget'
-      cache-version: ${{ inputs.nuget-cache-version }}
-      artifact-name: ${{ inputs.artifact-name }}
-      hash-glob: ${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/packages.lock.json
   - name: Create artifact key
     id: artifact-key
     uses: ./.github/actions/create-artifact-key
@@ -67,7 +59,7 @@ runs:
     id: nuget-cache
     with:
       path: ~/.nuget/packages
-      key: ${{ steps.cache-key.outputs.key }}
+      key: 'dummyKey'
   - name: Analyze Cache
     shell: bash
     run: |
