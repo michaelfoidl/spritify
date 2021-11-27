@@ -43,9 +43,7 @@ runs:
   - name: Initialize artifact cache
     uses: actions/cache@v2
     with:
-      path: |
-        ${{ github.workspace }}/**/bin
-        ${{ github.workspace }}/**/obj
+      path: ~
       key: ${{ steps.artifact-key.outputs.key }}
   - name: Find projects to build
     uses: ./.github/actions/find-projects
