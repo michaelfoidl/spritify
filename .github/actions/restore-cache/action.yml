@@ -7,14 +7,16 @@ inputs:
 runs:
   using: 'composite'
   steps:
+  - name: Get cache directory
+    shell: bash
+    run: |
+      CACHE_DIR=~/.${{ inputs.artifact-key }};
   - name: Initialize cache
     uses: actions/cache@v2
     with:
       key: ${{ inputs.artifact-key }}
-      path: ~/.${{ inputs.artifact-key }}
+      path: $CACHE_DIR
   - name: Copy files from cache
     shell: bash
     run: |
-      echo "::group::Copy files from cache"
-      cp -r ~/.${{ inputs.artifact-key }}/* ${{ github.workspace }}
-      echo "::endgroup::"
+      cp -r $CACHE_DIR/* ${{ github.workspace }}

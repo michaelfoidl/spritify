@@ -18,14 +18,13 @@ runs:
   - name: Create cache directory
     shell: bash
     run: |
-      echo "::group::Create cache directory"
-      mkdir ~/.${{ inputs.artifact-key }}
-      echo "::endgroup::"
+      CACHE_DIR=~/.${{ inputs.artifact-key }};
+      mkdir $CACHE_DIR
   - name: Initialize cache
     uses: actions/cache@v2
     with:
       key: ${{ inputs.artifact-key }}
-      path: ~/.${{ inputs.artifact-key }}
+      path: $CACHE_DIR
   - name: Copy files to cache
     shell: bash
     run: |
@@ -43,6 +42,4 @@ runs:
       REGEX=${{ inputs.artifact-regex }};
       fi
       echo "::endgroup::"
-      echo "::group::Copy files to cache"
-      find ${{ github.workspace }} -regex $REGEX | xargs -I {} cp -r --parents {} ~/.${{ inputs.artifact-key }}
-      echo "::endgroup::"
+      find ${{ github.workspace }} -regex $REGEX | xargs -I {} cp -r --parents {} $CACHE_DIR
