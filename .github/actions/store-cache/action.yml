@@ -19,7 +19,7 @@ runs:
     shell: bash
     run: |
       echo "::save-state name=ARTIFACT_KEY::${{ inputs.artifact-key }}"
-      mkdir ~/.${{ env.STATE_ARTIFACT_KEY }}
+      mkdir ~/.${{ inputs.artifact-key }}
   - name: Initialize cache
     uses: actions/cache@v2
     with:
@@ -42,4 +42,4 @@ runs:
       REGEX=${{ inputs.artifact-regex }};
       fi
       echo "::endgroup::"
-      find ${{ github.workspace }} -regex $REGEX | xargs -I {} cp -r --parents {} ~/.${{ env.STATE_ARTIFACT_KEY }}
+      find ${{ github.workspace }} -regex $REGEX | xargs -I {} cp -r --parents {} ~/.${{ inputs.artifact-key }}

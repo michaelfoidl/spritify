@@ -20,5 +20,5 @@ runs:
     shell: bash
     run: |
       echo "::group::Copy files from cache"
-      cp -r ~/.${{ env.STATE_ARTIFACT_KEY }} ${{ github.workspace }}
+      cp -r ~/.${{ inputs.artifact-key }} ${{ github.workspace }}
       echo "::endgroup::"
