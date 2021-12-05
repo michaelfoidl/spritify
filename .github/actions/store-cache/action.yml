@@ -18,13 +18,13 @@ runs:
   - name: Create cache directory
     shell: bash
     run: |
-      CACHE_DIR=~/.${{ inputs.artifact-key }};
-      mkdir $CACHE_DIR
+      echo "::save-state name=ARTIFACT_KEY::${{ inputs.artifact-key }}"
+      mkdir ~/.${{ env.STATE_ARTIFACT_KEY }}
   - name: Initialize cache
     uses: actions/cache@v2
     with:
-      key: ${{ inputs.artifact-key }}
-      path: $CACHE_DIR
+      key: ${{ env.STATE_ARTIFACT_KEY }}
+      path: ~/.${{ env.STATE_ARTIFACT_KEY }}
   - name: Copy files to cache
     shell: bash
     run: |
@@ -42,4 +42,4 @@ runs:
       REGEX=${{ inputs.artifact-regex }};
       fi
       echo "::endgroup::"
-      find ${{ github.workspace }} -regex $REGEX | xargs -I {} cp -r --parents {} $CACHE_DIR
+      find ${{ github.workspace }} -regex $REGEX | xargs -I {} cp -r --parents {} ~/.${{ env.STATE_ARTIFACT_KEY }}

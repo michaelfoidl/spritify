@@ -10,13 +10,15 @@ runs:
   - name: Get cache directory
     shell: bash
     run: |
-      CACHE_DIR=~/.${{ inputs.artifact-key }};
+      echo "::save-state name=ARTIFACT_KEY::${{ inputs.artifact-key }}"
   - name: Initialize cache
     uses: actions/cache@v2
     with:
-      key: ${{ inputs.artifact-key }}
-      path: $CACHE_DIR
+      key: $${{ env.STATE_ARTIFACT_KEY }}
+      path: ~/.${{ env.STATE_ARTIFACT_KEY }}
   - name: Copy files from cache
     shell: bash
     run: |
-      cp -r $CACHE_DIR/* ${{ github.workspace }}
+      echo "::group::Copy files from cache"
+      cp -r ~/.${{ env.STATE_ARTIFACT_KEY }} ${{ github.workspace }}
+      echo "::endgroup::"
