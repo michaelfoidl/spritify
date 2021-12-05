@@ -18,15 +18,13 @@ runs:
   using: 'composite'
   steps:
     - name: Restore Spritify.TestFramework
-      uses: actions/cache@v2
+      uses: ./.github/actions/restore-cache
       with:
-        path: .
-        key: ${{ inputs.build-testFramework-artifact-key }}
+        artifact-key: ${{ inputs.build-testFramework-artifact-key }}
     - name: Restore Spritify.Workflow
-      uses: actions/cache@v2
+      uses: ./.github/actions/restore-cache
       with:
-        path: .
-        key: ${{ inputs.build-workflow-artifact-key }}
+        artifact-key: ${{ inputs.build-workflow-artifact-key }}
     - name: Build Spritify.Workflow.Test
       id: build
       uses: ./.github/actions/build-dotnet

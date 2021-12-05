@@ -11,28 +11,31 @@ inputs:
     description: 'Artifact key of the build-common step'
     required: true
 outputs:
-  artifact-key:
-    description: 'Key to the build artifact'
-    value: ${{ steps.build.outputs.artifact-key }}
+  artifact-key-dotnet:
+    description: 'Key to the .NET build artifact'
+    value: ${{ steps.build-dotnet.outputs.artifact-key }}
+  artifact-key-node:
+    description: 'Key to the Node.js build artifact'
+    value: ${{ steps.build-node.outputs.artifact-key }}
 runs:
   using: 'composite'
   steps:
     - name: Restore Spritify.Common
-      uses: actions/cache@v2
+      uses: ./.github/actions/restore-cache
       with:
-        path: .
-        key: ${{ inputs.build-common-artifact-key }}
+        artifact-key: ${{ inputs.build-common-artifact-key }}
     - name: Build Spritify.Web (1/2)
-      id: build
+      id: build-dotnet
       uses: ./.github/actions/build-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         root-directory: ./web
-        artifact-name: spritify-web
+        artifact-name: spritify-web-dotnet
     - name: Build Spritify.Web (2/2)
+      id: build-node
       uses: ./.github/actions/build-node
       with:
         node-version: ${{ inputs.node-version }}
         root-directory: ./web
         npm-cache-version: '2'
-        artifact-name: spritify-web
+        artifact-name: spritify-web-node

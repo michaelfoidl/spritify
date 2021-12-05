@@ -1,0 +1,48 @@
+name: store-cache
+description: 'Caches the given files'
+inputs:
+  artifact-key:
+    description: 'Key of the artifact to store'
+    required: true
+  artifact-regex:
+    description: 'Regex that identifies the items to include in the artifact'
+    required: false
+    default: ''
+  preset:
+    description: 'A preset for artifact-regex - supported are "dotnet" and "node"'
+    required: false
+    default: ''
+runs:
+  using: 'composite'
+  steps:
+  - name: Create cache directory
+    shell: bash
+    run: |
+      echo "::group::Create cache directory"
+      mkdir ~/.${{ inputs.artifact-key }}
+      echo "::endgroup::"
+  - name: Initialize cache
+    uses: actions/cache@v2
+    with:
+      key: ${{ inputs.artifact-key }}
+      path: ~/.${{ inputs.artifact-key }}
+  - name: Copy files to cache
+    shell: bash
+    run: |
+      echo "::group::Prepare regex"
+      if [ ${{ inputs.preset }} == "dotnet" ];
+      then
+      echo "Mode: dotnet";
+      REGEX=".*/\(bin\|obj\)$";
+      elif [ ${{ inputs.preset }} == "node" ];
+      then
+      echo "Mode: node";
+      REGEX=".*/\dist$";
+      else
+      echo "Mode: artifact-regex";
+      REGEX=${{ inputs.artifact-regex }};
+      fi
+      echo "::endgroup::"
+      echo "::group::Copy files to cache"
+      find ${{ github.workspace }} -regex $REGEX | xargs -I {} cp -r --parents {} ~/.${{ inputs.artifact-key }}
+      echo "::endgroup::"

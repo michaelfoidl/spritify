@@ -44,12 +44,6 @@ runs:
     with:
       artifact-name: ${{ inputs.artifact-name }}
       is-build-artifact: true
-  - name: Initialize artifact cache
-    uses: actions/cache@v2
-    with:
-      path: |
-        ${{ github.workspace }}/**/dist
-        !${{ github.workspace }}/**/node_modules
   - name: Find projects to build
     uses: ./.github/actions/find-projects
     id: find-projects
@@ -96,3 +90,8 @@ runs:
       echo "::group::Build"
       echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} npm --prefix {} run build
       echo "::endgroup::"
+  - name: Cache artifact
+    uses: ./.github/actions/store-cache
+    with:
+      artifact-key: ${{ steps.artifact-key.outputs.key }}
+      preset: node

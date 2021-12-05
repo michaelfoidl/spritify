@@ -1,0 +1,20 @@
+name: restore-cache
+description: 'Restores the files cached under the given artifact name'
+inputs:
+  artifact-key:
+    description: 'Key of the artifact to restore'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+  - name: Initialize cache
+    uses: actions/cache@v2
+    with:
+      key: ${{ inputs.artifact-key }}
+      path: ~/.${{ inputs.artifact-key }}
+  - name: Copy files from cache
+    shell: bash
+    run: |
+      echo "::group::Copy files from cache"
+      cp -r ~/.${{ inputs.artifact-key }}/* ${{ github.workspace }}
+      echo "::endgroup::"
