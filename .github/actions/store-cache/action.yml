@@ -23,8 +23,8 @@ runs:
   - name: Initialize cache
     uses: actions/cache@v2
     with:
-      key: ${{ env.STATE_ARTIFACT_KEY }}
-      path: ~/.${{ env.STATE_ARTIFACT_KEY }}
+      key: ${{ inputs.artifact-key }}${{ env.STATE_ARTIFACT_KEY }}
+      path: ~/.${{ inputs.artifact-key }}${{ env.STATE_ARTIFACT_KEY }}
   - name: Copy files to cache
     shell: bash
     run: |
