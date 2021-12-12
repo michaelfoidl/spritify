@@ -36,7 +36,7 @@ runs:
       exit 1;
       fi
       echo "::endgroup::"
-      eval "find ${{ github.workspace }} $ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts
+      eval "find . $ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts
   - name: Debug
     shell: bash
     run: |

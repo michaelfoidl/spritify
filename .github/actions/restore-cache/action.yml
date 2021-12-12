@@ -16,7 +16,7 @@ runs:
     shell: bash
     run: |
       echo "::group::Copy files from cache"
-      cp -r ~/.artifacts/* ${{ github.workspace }}
+      cp -r ~/.artifacts/* .
       echo "::endgroup::"
   - name: Debug
     shell: bash
