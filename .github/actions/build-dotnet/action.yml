@@ -65,4 +65,4 @@ runs:
     uses: ./.github/actions/store-cache
     with:
       artifact-key: ${{ steps.artifact-key.outputs.key }}
-      preset: dotnet
+      artifact-mode: dotnet

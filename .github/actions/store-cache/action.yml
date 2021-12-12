@@ -4,14 +4,9 @@ inputs:
   artifact-key:
     description: 'Key of the artifact to store'
     required: true
-  find-args:
-    description: 'Additional, custom args provided to the unix find command for identifying the items to include in the artifact'
-    required: false
-    default: ''
-  preset:
-    description: 'A preset for find-args - supported are "dotnet" and "node"'
-    required: false
-    default: ''
+  artifact-mode:
+    description: 'Defines which items to include in the artifact - supported are "dotnet" and "node"'
+    required: true
 runs:
   using: 'composite'
   steps:
@@ -27,18 +22,18 @@ runs:
   - name: Copy files to cache
     shell: bash
     run: |
-      echo "::group::Prepare regex"
-      if [ ${{ inputs.preset }} == "dotnet" ];
+      echo "::group::Look for artifact items"
+      if [ ${{ inputs.artifact-mode }} == "dotnet" ];
       then
       echo "Mode: dotnet";
-      ARGS="-regex ".*/\(bin\|obj\)$"";
-      elif [ ${{ inputs.preset }} == "node" ];
+      ARGS="-regex \".*/\(bin\|obj\)$\"";
+      elif [ ${{ inputs.artifact-mode }} == "node" ];
       then
       echo "Mode: node";
-      ARGS="! -regex ".*/node_modules/.*" -regex ".*/\dist$"";
+      ARGS="! -regex \".*/node_modules/.*\" -regex \".*/\dist$\"";
       else
-      echo "Mode: custom arguments";
-      ARGS=${{ inputs.find-args }};
+      echo "Unknown mode: ${{ inputs.artifact-mode }}.";
+      exit 1;
       fi
       echo "::endgroup::"
-      find ${{ github.workspace }} $ARGS | xargs -I {} cp -r --parents {}  ~/.artifacts
+      eval "find ${{ github.workspace }} $ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts
