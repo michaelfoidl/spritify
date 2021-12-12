@@ -11,11 +11,11 @@ runs:
     uses: actions/cache@v2
     with:
       key: ${{ inputs.artifact-key }}
-      path: ~/.artifacts
+      path: ~/.artifacts/${{ inputs.artifact-key }}
   - name: Copy files from cache
     shell: bash
     run: |
-      cp -r ~/.artifacts/* .
+      cp -r ~/.artifacts/${{ inputs.artifact-key }}/* .
   - name: Debug
     shell: bash
     run: |

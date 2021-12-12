@@ -13,13 +13,13 @@ runs:
   - name: Create or reset cache directory
     shell: bash
     run: |
-      mkdir -p ~/.artifacts
-      rm -rf ~/.artifacts/*
+      mkdir -p ~/.artifacts/${{ inputs.artifact-key }}
+      rm -rf ~/.artifacts/${{ inputs.artifact-key }}/*
   - name: Initialize cache
     uses: actions/cache@v2
     with:
       key: ${{ inputs.artifact-key }}
-      path: ~/.artifacts
+      path: ~/.artifacts/${{ inputs.artifact-key }}
   - name: Copy files to cache
     shell: bash
     run: |
@@ -37,10 +37,10 @@ runs:
       exit 1;
       fi
       echo "::endgroup::"
-      eval "find . $ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts
+      eval "find . $ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts/${{ inputs.artifact-key }}
   - name: Debug
     shell: bash
     run: |
       echo "::group::Artifact content::"
-      find ~/.artifacts
+      find ~/.artifacts/${{ inputs.artifact-key }}
       echo "::endgroup::"
