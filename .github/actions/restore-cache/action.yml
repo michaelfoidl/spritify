@@ -18,3 +18,12 @@ runs:
       echo "::group::Copy files from cache"
       cp -r ~/.artifacts/* ${{ github.workspace }}
       echo "::endgroup::"
+  - name: Debug
+    shell: bash
+    run: |
+      echo "::group::Artifact content"
+      find ~/.artifacts
+      echo "::endgroup::"
+      echo "::group::Workspace content"
+      find ${{ github.workspace }}
+      echo "::endgroup::"
