@@ -38,3 +38,9 @@ runs:
       fi
       echo "::endgroup::"
       eval "find . $ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts
+  - name: Debug
+    shell: bash
+    run: |
+      echo "::group::Artifact content::"
+      find ~/.artifacts
+      echo "::endgroup::"
