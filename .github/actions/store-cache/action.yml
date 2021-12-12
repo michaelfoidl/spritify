@@ -4,12 +4,12 @@ inputs:
   artifact-key:
     description: 'Key of the artifact to store'
     required: true
-  artifact-regex:
-    description: 'Regex that identifies the items to include in the artifact'
+  find-args:
+    description: 'Additional, custom args provided to the unix find command for identifying the items to include in the artifact'
     required: false
     default: ''
   preset:
-    description: 'A preset for artifact-regex - supported are "dotnet" and "node"'
+    description: 'A preset for find-args - supported are "dotnet" and "node"'
     required: false
     default: ''
 runs:
@@ -18,13 +18,12 @@ runs:
   - name: Create cache directory
     shell: bash
     run: |
-      echo "::save-state name=ARTIFACT_KEY::${{ inputs.artifact-key }}"
-      mkdir ~/.${{ inputs.artifact-key }}
+      mkdir  ~/.artifacts
   - name: Initialize cache
     uses: actions/cache@v2
     with:
-      key: ${{ inputs.artifact-key }}${{ env.STATE_ARTIFACT_KEY }}
-      path: ~/.${{ inputs.artifact-key }}${{ env.STATE_ARTIFACT_KEY }}
+      key: ${{ inputs.artifact-key }}
+      path: ~/.artifacts
   - name: Copy files to cache
     shell: bash
     run: |
@@ -32,14 +31,14 @@ runs:
       if [ ${{ inputs.preset }} == "dotnet" ];
       then
       echo "Mode: dotnet";
-      REGEX=".*/\(bin\|obj\)$";
+      ARGS="-regex ".*/\(bin\|obj\)$"";
       elif [ ${{ inputs.preset }} == "node" ];
       then
       echo "Mode: node";
-      REGEX=".*/\dist$";
+      ARGS="! -regex ".*/node_modules/.*" -regex ".*/\dist$"";
       else
-      echo "Mode: artifact-regex";
-      REGEX=${{ inputs.artifact-regex }};
+      echo "Mode: custom arguments";
+      ARGS=${{ inputs.find-args }};
       fi
       echo "::endgroup::"
-      find ${{ github.workspace }} -regex $REGEX | xargs -I {} cp -r --parents {} ~/.${{ inputs.artifact-key }}
+      find ${{ github.workspace }} $ARGS | xargs -I {} cp -r --parents {}  ~/.artifacts
