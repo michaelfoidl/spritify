@@ -99,4 +99,4 @@ runs:
     with:
       artifact-key: ${{ steps.artifact-key.outputs.key }}
       artifact-mode: node
-      collaboration-mode: ${{ inputs.is-collaborative-build && 'collect' || 'default' }}
+      collaboration-mode: ${{ inputs.is-collaborative-build == 'true' && 'collect' || 'default' }}
