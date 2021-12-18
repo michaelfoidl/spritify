@@ -45,5 +45,6 @@ runs:
     - name: Collect artifacts
       uses: ./.github/actions/store-cache
       with:
+        artifact-key: ${{ steps.build-dotnet.outputs.artifact-key }}
         collaboration-mode: 'collect'
       

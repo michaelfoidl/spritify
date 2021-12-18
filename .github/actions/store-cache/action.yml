@@ -2,7 +2,7 @@ name: store-cache
 description: 'Caches the given files'
 inputs:
   artifact-key:
-    description: 'Key of the artifact to store (can be omitted if collaboration-mode is set to "prepare" or "collect")'
+    description: 'Key of the artifact to store (can be omitted if collaboration-mode is set to "prepare" or "append")'
     required: false
     default: ''
   artifact-mode:
