@@ -18,6 +18,10 @@ inputs:
     description: 'If set to true, only test projects are built. If set to false, all projects except test projects are built. If not set, all projects are built.'
     required: false
     default: ''
+  is-collaborative-build:
+    description: 'If set to true, artifacts created during this build are collected, but not yet stored - this has to be done in a manual step afterwards.'
+    required: false
+    default: false
 outputs:
   artifact-key:
     description: 'Key to the build artifact'
@@ -66,3 +70,4 @@ runs:
     with:
       artifact-key: ${{ steps.artifact-key.outputs.key }}
       artifact-mode: dotnet
+      collaboration-mode: ${{ inputs.is-collaborative-build == "true" && "collect" || "default" }}

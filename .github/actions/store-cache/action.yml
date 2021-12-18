@@ -5,42 +5,64 @@ inputs:
     description: 'Key of the artifact to store'
     required: true
   artifact-mode:
-    description: 'Defines which items to include in the artifact - supported are "dotnet" and "node"'
-    required: true
+    description: 'Defines which items to include in the artifact - supported are "dotnet" and "node", but it can be omitted if collaboration-mode is set to "collect"'
+    required: false
+    default: ''
+  collaboration-mode:
+    description: 'Defines how to handle multiple artifacts created during the same job - "collect" takes existing artifacts and bundles them into one result, "append" adds the results from this step to any existing artifacts, "default" combines both previous options into a single step'
+    required: false
+    default: 'default'
 runs:
   using: 'composite'
   steps:
-  - name: Create or reset cache directory
+  - name: Checking collaboration mode
     shell: bash
     run: |
-      mkdir -p ~/.artifacts/${{ inputs.artifact-key }}
-      rm -rf ~/.artifacts/${{ inputs.artifact-key }}/*
+      if [ ${{ inputs.collaboration-mode }} == "default" ];
+      then
+      echo "Collaboration mode: default";
+      elif [ ${{ inputs.collaboration-mode }} == "collect" ];
+      then
+      echo "Collaboration mode: collect";
+      elif [ ${{ inputs.collaboration.mode }} == "append" ];
+      then
+      echo "Collaboration mode: append";
+      else
+      echo "Unknown collaboration mode: ${{ inputs.collaboration-mode }}.";
+      exit 1;
+      fi
+  - name: Create cache directory if not existent
+    shell: bash
+    run: |
+      mkdir -p ~/.artifacts
   - name: Initialize cache
     uses: actions/cache@v2
+    if: ${{ inputs.collaboration-mode }} == "default" || ${{ inputs.collaboration-mode }} == "collect"
     with:
       key: ${{ inputs.artifact-key }}
-      path: ~/.artifacts/${{ inputs.artifact-key }}
+      path: ~/.artifacts
   - name: Copy files to cache
+    if: ${{ inputs.collaboration-mode }} == "default" || ${{ inputs.collaboration-mode }} == "append"
     shell: bash
     run: |
       echo "::group::Look for artifact items"
       if [ ${{ inputs.artifact-mode }} == "dotnet" ];
       then
-      echo "Mode: dotnet";
+      echo "Artifact mode: dotnet";
       ARGS="-regex \".*/\(bin\|obj\)$\"";
       elif [ ${{ inputs.artifact-mode }} == "node" ];
       then
-      echo "Mode: node";
+      echo "Artifact mode: node";
       ARGS="! -regex \".*/node_modules/.*\" -regex \".*/\dist$\"";
       else
-      echo "Unknown mode: ${{ inputs.artifact-mode }}.";
+      echo "Unknown artifact mode: ${{ inputs.artifact-mode }}.";
       exit 1;
       fi
       echo "::endgroup::"
-      eval "find . $ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts/${{ inputs.artifact-key }}
+      eval "find . $ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts
   - name: Debug
     shell: bash
     run: |
       echo "::group::Artifact content::"
-      find ~/.artifacts/${{ inputs.artifact-key }}
+      find ~/.artifacts
       echo "::endgroup::"

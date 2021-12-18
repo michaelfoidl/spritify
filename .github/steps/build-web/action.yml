@@ -11,12 +11,9 @@ inputs:
     description: 'Artifact key of the build-common step'
     required: true
 outputs:
-  artifact-key-dotnet:
-    description: 'Key to the .NET build artifact'
+  artifact-key:
+    description: 'Key to the build artifact'
     value: ${{ steps.build-dotnet.outputs.artifact-key }}
-  artifact-key-node:
-    description: 'Key to the Node.js build artifact'
-    value: ${{ steps.build-node.outputs.artifact-key }}
 runs:
   using: 'composite'
   steps:
@@ -30,7 +27,8 @@ runs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         root-directory: ./web
-        artifact-name: spritify-web-dotnet
+        artifact-name: spritify-web
+        is-collaborative-build: true
     - name: Build Spritify.Web (2/2)
       id: build-node
       uses: ./.github/actions/build-node
@@ -38,4 +36,11 @@ runs:
         node-version: ${{ inputs.node-version }}
         root-directory: ./web
         npm-cache-version: '2'
-        artifact-name: spritify-web-node
+        artifact-name: spritify-web
+        is-collaborative-build: true
+    - name: Store artifact
+      uses: ./.github/actions/store-cache
+      with:
+        artifact-key: ${{ steps.build-dotnet.outputs.artifact-key }}
+        collaboration-mode: 'collect'
+      
