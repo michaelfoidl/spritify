@@ -36,19 +36,19 @@ runs:
       exit 1;
       fi
   - name: Create and/or reset cache directory
-    if: ${{ inputs.collaboration-mode }} == 'default' || ${{ inputs.collaboration-mode }} == 'prepare'
+    if: inputs.collaboration-mode == 'default' || inputs.collaboration-mode == 'prepare'
     shell: bash
     run: |
       mkdir -p ~/.artifacts
       rm -rf ~/.artifacts/*
   - name: Initialize cache
     uses: actions/cache@v2
-    if: ${{ inputs.collaboration-mode }} == 'default' || ${{ inputs.collaboration-mode }} == 'collect'
+    if: inputs.collaboration-mode == 'default' || inputs.collaboration-mode == 'collect'
     with:
       key: ${{ inputs.artifact-key }}
       path: ~/.artifacts
   - name: Copy files to cache
-    if: ${{ inputs.collaboration-mode }} == 'default' || ${{ inputs.collaboration-mode }} == 'append'
+    if: inputs.collaboration-mode == 'default' || inputs.collaboration-mode == 'append'
     shell: bash
     run: |
       echo "::group::Look for artifact items"
