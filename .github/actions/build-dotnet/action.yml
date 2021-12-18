@@ -21,7 +21,7 @@ inputs:
   is-collaborative-build:
     description: 'If set to true, artifacts created during this build are collected, but not yet stored - this has to be done in a manual step afterwards.'
     required: false
-    default: false
+    default: 'false'
 outputs:
   artifact-key:
     description: 'Key to the build artifact'
