@@ -17,9 +17,9 @@ runs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         root-directory: ./web
-        artifact-name: spritify-web-dotnet
+        artifact-name: spritify-web
     - name: Publish Spritify.Web (2/2)
       uses: ./.github/actions/publish-node
       with:
         root-directory: ./web
-        artifact-name: spritify-web-node
+        artifact-name: spritify-web
