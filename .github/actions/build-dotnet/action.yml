@@ -70,4 +70,4 @@ runs:
     with:
       artifact-key: ${{ steps.artifact-key.outputs.key }}
       artifact-mode: dotnet
-      collaboration-mode: ${{ inputs.is-collaborative-build == "true" && "collect" || "default" }}
+      collaboration-mode: ${{ inputs.is-collaborative-build && "collect" || "default" }}
