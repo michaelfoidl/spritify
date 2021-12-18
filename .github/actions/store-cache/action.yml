@@ -2,14 +2,15 @@ name: store-cache
 description: 'Caches the given files'
 inputs:
   artifact-key:
-    description: 'Key of the artifact to store'
-    required: true
+    description: 'Key of the artifact to store (can be omitted if collaboration-mode is set to "prepare" or "collect")'
+    required: false
+    default: ''
   artifact-mode:
-    description: 'Defines which items to include in the artifact - supported are "dotnet" and "node", but it can be omitted if collaboration-mode is set to "collect"'
+    description: 'Defines which items to include in the artifact (can be omitted if collaboration-mode is set to "prepare" or "collect") - supported are "dotnet" and "node"'
     required: false
     default: ''
   collaboration-mode:
-    description: 'Defines how to handle multiple artifacts created during the same job - "collect" takes existing artifacts and bundles them into one result, "append" adds the results from this step to any existing artifacts, "default" combines both previous options into a single step'
+    description: 'Defines how to handle multiple artifacts created during the same job - "prepare" prepares the artifact folder, "append" adds the results from this step to any existing artifacts, "collect" takes existing artifacts and bundles them into one result, "default" combines all previous options into a single step'
     required: false
     default: 'default'
 runs:
@@ -21,20 +22,25 @@ runs:
       if [ ${{ inputs.collaboration-mode }} == "default" ];
       then
       echo "Collaboration mode: default";
+      elif [ ${{ inputs.collaboration-mode }} == "prepare" ];
+      then
+      echo "Collaboration mode: prepare";
       elif [ ${{ inputs.collaboration-mode }} == "collect" ];
       then
       echo "Collaboration mode: collect";
-      elif [ ${{ inputs.collaboration.mode }} == "append" ];
+      elif [ ${{ inputs.collaboration-mode }} == "append" ];
       then
       echo "Collaboration mode: append";
       else
       echo "Unknown collaboration mode: ${{ inputs.collaboration-mode }}.";
       exit 1;
       fi
-  - name: Create cache directory if not existent
+  - name: Create and/or reset cache directory
+    if: ${{ inputs.collaboration-mode }} == "default" || ${{ inputs.collaboration-mode }} == "prepare"
     shell: bash
     run: |
       mkdir -p ~/.artifacts
+      rm -rf ~/.artifacts/*
   - name: Initialize cache
     uses: actions/cache@v2
     if: ${{ inputs.collaboration-mode }} == "default" || ${{ inputs.collaboration-mode }} == "collect"

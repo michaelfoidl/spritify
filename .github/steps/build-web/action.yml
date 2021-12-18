@@ -21,6 +21,10 @@ runs:
       uses: ./.github/actions/restore-cache
       with:
         artifact-key: ${{ inputs.build-common-artifact-key }}
+    - name: Prepare artifacts
+      uses: ./.github/actions/store-cache
+      with:
+        collaboration-mode: 'prepare'
     - name: Build Spritify.Web (1/2)
       id: build-dotnet
       uses: ./.github/actions/build-dotnet
@@ -38,9 +42,8 @@ runs:
         npm-cache-version: '2'
         artifact-name: spritify-web
         is-collaborative-build: true
-    - name: Store artifact
+    - name: Collect artifacts
       uses: ./.github/actions/store-cache
       with:
-        artifact-key: ${{ steps.build-dotnet.outputs.artifact-key }}
         collaboration-mode: 'collect'
       
