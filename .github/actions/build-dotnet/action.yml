@@ -38,6 +38,14 @@ runs:
     uses: ./.github/actions/normalize-path
     with:
       path: ${{ inputs.root-directory }}
+  - name: Create cache key
+    id: cache-key
+    uses: ./.github/actions/create-cache-key
+    with:
+      cache-type: 'nuget'
+      cache-version: ${{ inputs.nuget-cache-version }}
+      artifact-name: ${{ inputs.artifact-name }}
+      hash-glob: ${{ github.workspace }}/**/${{ steps.normalize-path.outputs.path }}/**/packages.lock.json
   - name: Create artifact key
     id: artifact-key
     uses: ./.github/actions/create-artifact-key
@@ -51,6 +59,23 @@ runs:
       root-directory: ${{ inputs.root-directory }}
       project-name-schema: '*.csproj'
       test-projects: ${{ inputs.test-projects }}
+  - name: Look for cached dependencies
+    uses: actions/cache@v2
+    id: nuget-cache
+    with:
+      path: ~/.nuget/packages
+      key: ${{ steps.cache-key.outputs.key }}
+  - name: Analyze Cache
+    shell: bash
+    run: |
+      echo "::group::Analyze Cache"
+      if [ ${{ steps.nuget-cache.outputs.cache-hit }} == "true" ];
+      then
+      echo "Cache OK - restoring package info only";
+      else
+      echo "No Cache found - restoring packages";
+      fi
+      echo "::endgroup::"
   - name: Nuget Restore
     shell: bash
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
