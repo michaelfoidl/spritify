@@ -69,6 +69,7 @@ runs:
       fi
       echo "::endgroup::"
       eval "find . $CONTENT_ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts/content/
+      mkdir -p ~/.artifacts/packages/$PACKAGE_ROOT_FOLDER_NAME/
       cp -r ~/$PACKAGE_ROOT_FOLDER_NAME/* ~/.artifacts/packages/$PACKAGE_ROOT_FOLDER_NAME/
   - name: Debug
     shell: bash
