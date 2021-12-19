@@ -80,5 +80,5 @@ runs:
   - name: Upload cache
     uses: actions/upload-artifact@v2
       with:
-        name: ${{ inputs.artifact-key }}
+        name: dummy
         path: ~/.artifacts
