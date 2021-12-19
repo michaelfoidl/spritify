@@ -87,6 +87,12 @@ runs:
       echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} cp -r ~/.npm/packages/{}/node_modules {}
       echo "Packages collected successfully."
       echo "::endgroup::"
+  - name: Debug
+    shell: bash
+    run: |
+      echo "::group::Npm cache content::"
+      find ~/.npm/packages
+      echo "::endgroup::"
   - name: Build
     shell: bash
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
