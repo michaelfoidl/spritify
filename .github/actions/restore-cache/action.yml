@@ -22,7 +22,7 @@ runs:
     shell: bash
     run: |
       cp -r ~/.artifacts/content/* .
-      cp -r ~/.artifacts/packages/* ~
+      cp -a ~/.artifacts/packages/* ~
   - name: Debug
     shell: bash
     run: |
