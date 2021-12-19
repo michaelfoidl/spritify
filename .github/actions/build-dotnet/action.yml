@@ -82,7 +82,7 @@ runs:
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Nuget Restore"
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet restore {} --packages ~/.nuget/packages --no-dependencies
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet restore {} --packages ~/.nuget/packages --no-dependencies --locked-mode /p:DisableImplicitNuGetFallbackFolder=true
       echo "::endgroup::"
   - name: Debug
     shell: bash

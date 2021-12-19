@@ -39,8 +39,9 @@ runs:
     if: inputs.collaboration-mode == 'default' || inputs.collaboration-mode == 'prepare'
     shell: bash
     run: |
-      mkdir -p ~/.artifacts
       rm -rf ~/.artifacts/*
+      mkdir -p ~/.artifacts/content
+      mkdir -p ~/.artifacts/packages
   - name: Initialize cache
     uses: actions/cache@v2
     if: inputs.collaboration-mode == 'default' || inputs.collaboration-mode == 'collect'
@@ -55,17 +56,20 @@ runs:
       if [ ${{ inputs.artifact-mode }} == "dotnet" ];
       then
       echo "Artifact mode: dotnet";
-      ARGS="-regex \".*/\(bin\|obj\)$\"";
+      CONTENT_ARGS="-regex \".*/\(bin\|obj\)$\"";
+      PACKAGE_ROOT_FOLDER_NAME=".nuget";
       elif [ ${{ inputs.artifact-mode }} == "node" ];
       then
       echo "Artifact mode: node";
-      ARGS="! -regex \".*/node_modules/.*\" -regex \".*/\dist$\"";
+      CONTENT_ARGS="! -regex \".*/node_modules/.*\" -regex \".*/\dist$\"";
+      PACKAGE_ROOT_FOLDER_NAME=".npm";
       else
       echo "Unknown artifact mode: ${{ inputs.artifact-mode }}.";
       exit 1;
       fi
       echo "::endgroup::"
-      eval "find . $ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts
+      eval "find . $CONTENT_ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts/content/
+      cp -r ~/$PACKAGE_ROOT_FOLDER_NAME/* ~/.artifacts/packages/$PACKAGE_ROOT_FOLDER_NAME/
   - name: Debug
     shell: bash
     run: |

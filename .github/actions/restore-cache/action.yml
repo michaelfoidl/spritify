@@ -15,7 +15,8 @@ runs:
   - name: Copy files from cache
     shell: bash
     run: |
-      cp -r ~/.artifacts/* .
+      cp -r ~/.artifacts/content/* .
+      cp -r ~/.artifacts/packages/* ~
   - name: Debug
     shell: bash
     run: |
