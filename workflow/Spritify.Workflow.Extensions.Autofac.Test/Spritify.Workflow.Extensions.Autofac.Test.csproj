@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\testFramework\Spritify.TestFramework.targets" />
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spritify.Workflow.Extensions.Autofac\Spritify.Workflow.Extensions.Autofac.csproj" />
+    <ProjectReference Include="..\Spritify.Workflow.Extensions.Test.Base\Spritify.Workflow.Extensions.Test.Base.csproj" />
+  </ItemGroup>
+
+</Project>

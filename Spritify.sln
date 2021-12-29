@@ -62,9 +62,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Common.Control
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Api.Common.Logic.Interfaces", "api\common\Spritify.Api.Common.Logic.Interfaces\Spritify.Api.Common.Logic.Interfaces.csproj", "{1D169C8C-AB68-4CB7-86B2-FFD22CB2AD79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spritify.Workflow.Extensions.Autofac", "workflow\Spritify.Workflow.Extensions.Autofac\Spritify.Workflow.Extensions.Autofac.csproj", "{AC16B6F8-F4D5-487E-82E1-789CA812B429}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Workflow.Extensions.Autofac", "workflow\Spritify.Workflow.Extensions.Autofac\Spritify.Workflow.Extensions.Autofac.csproj", "{AC16B6F8-F4D5-487E-82E1-789CA812B429}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spritify.Workflow.Extensions.Microsoft.DependencyInjection", "workflow\Spritify.Workflow.Extensions.Microsoft.DependencyInjection\Spritify.Workflow.Extensions.Microsoft.DependencyInjection.csproj", "{B18A32E5-F8AB-438B-847F-F33A7D3511C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Workflow.Extensions.Microsoft.DependencyInjection", "workflow\Spritify.Workflow.Extensions.Microsoft.DependencyInjection\Spritify.Workflow.Extensions.Microsoft.DependencyInjection.csproj", "{B18A32E5-F8AB-438B-847F-F33A7D3511C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Workflow.Extensions.Autofac.Test", "workflow\Spritify.Workflow.Extensions.Autofac.Test\Spritify.Workflow.Extensions.Autofac.Test.csproj", "{824D401C-90FE-4B1F-AC2B-B76F5A34CC02}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spritify.Workflow.Extensions.Test.Base", "workflow\Spritify.Workflow.Extensions.Test.Base\Spritify.Workflow.Extensions.Test.Base.csproj", "{1146BD33-A180-4D64-80D5-3187D7AD8BC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spritify.Workflow.Extensions.Microsoft.DependencyInjection.Test", "workflow\Spritify.Workflow.Extensions.Microsoft.DependencyInjection.Test\Spritify.Workflow.Extensions.Microsoft.DependencyInjection.Test.csproj", "{DA80496B-AF94-47F7-9A6E-2DC02F69FE9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -164,6 +170,18 @@ Global
 		{B18A32E5-F8AB-438B-847F-F33A7D3511C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B18A32E5-F8AB-438B-847F-F33A7D3511C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B18A32E5-F8AB-438B-847F-F33A7D3511C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{824D401C-90FE-4B1F-AC2B-B76F5A34CC02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{824D401C-90FE-4B1F-AC2B-B76F5A34CC02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{824D401C-90FE-4B1F-AC2B-B76F5A34CC02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{824D401C-90FE-4B1F-AC2B-B76F5A34CC02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1146BD33-A180-4D64-80D5-3187D7AD8BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1146BD33-A180-4D64-80D5-3187D7AD8BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1146BD33-A180-4D64-80D5-3187D7AD8BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1146BD33-A180-4D64-80D5-3187D7AD8BC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA80496B-AF94-47F7-9A6E-2DC02F69FE9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA80496B-AF94-47F7-9A6E-2DC02F69FE9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA80496B-AF94-47F7-9A6E-2DC02F69FE9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA80496B-AF94-47F7-9A6E-2DC02F69FE9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -194,6 +212,9 @@ Global
 		{1D169C8C-AB68-4CB7-86B2-FFD22CB2AD79} = {D0C1166B-B070-4A1F-84D3-3BFDF83AE557}
 		{AC16B6F8-F4D5-487E-82E1-789CA812B429} = {2A43E239-6A04-4ACF-AB2B-BDA7840CCA42}
 		{B18A32E5-F8AB-438B-847F-F33A7D3511C7} = {2A43E239-6A04-4ACF-AB2B-BDA7840CCA42}
+		{824D401C-90FE-4B1F-AC2B-B76F5A34CC02} = {2A43E239-6A04-4ACF-AB2B-BDA7840CCA42}
+		{1146BD33-A180-4D64-80D5-3187D7AD8BC2} = {2A43E239-6A04-4ACF-AB2B-BDA7840CCA42}
+		{DA80496B-AF94-47F7-9A6E-2DC02F69FE9C} = {2A43E239-6A04-4ACF-AB2B-BDA7840CCA42}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD304890-DEF1-462E-9016-C6FC9B72B7C6}
