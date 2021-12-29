@@ -15,9 +15,6 @@ runs:
   - name: Debug
     shell: bash
     run: |
-      ls -l ~
-      ls -al ~
-      ls -al ~/.npm/
       whoami
   - name: Copy files from cache
     shell: bash
