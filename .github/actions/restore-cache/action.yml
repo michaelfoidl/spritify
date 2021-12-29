@@ -12,10 +12,6 @@ runs:
     with:
       key: ${{ inputs.artifact-key }}
       path: ~/.artifacts
-  - name: Debug
-    shell: bash
-    run: |
-      whoami
   - name: Copy files from cache
     shell: bash
     run: |
