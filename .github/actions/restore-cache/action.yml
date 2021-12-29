@@ -12,23 +12,9 @@ runs:
     with:
       key: ${{ inputs.artifact-key }}
       path: ~/.artifacts
-  - name: Debug
-    shell: bash
-    run: |
-      echo "::group::Artifact content"
-      echo ~/.artifacts/packages/*
-      shopt -s dotglob
-      echo ~/.artifacts/packages/* 
-      echo "::endgroup::"
   - name: Copy files from cache
     shell: bash
     run: |
       cp -r ~/.artifacts/content/* .
       shopt -s dotglob
       cp -r ~/.artifacts/packages/* ~
-  - name: Debug
-    shell: bash
-    run: |
-      echo "::group::Workspace content"
-      find ${{ github.workspace }}
-      echo "::endgroup::"

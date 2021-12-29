@@ -83,18 +83,12 @@ runs:
       echo "::group::Nuget Restore"
       echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet restore {} --packages ~/.nuget/packages --no-dependencies --locked-mode /p:DisableImplicitNuGetFallbackFolder=true
       echo "::endgroup::"
-  - name: Debug
-    shell: bash
-    run: |
-      echo "::group::Nuget cache content::"
-      find ~/.nuget/packages
-      echo "::endgroup::"
   - name: Build
     shell: bash
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Build"
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --source ~/.nuget/packages
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ~/.nuget/packages
       echo "::endgroup::"
   - name: Cache artifact
     uses: ./.github/actions/store-cache

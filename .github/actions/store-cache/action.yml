@@ -19,6 +19,7 @@ runs:
   - name: Checking collaboration mode
     shell: bash
     run: |
+      echo "::group::Parsing collaboration mode"
       if [ ${{ inputs.collaboration-mode }} == "default" ];
       then
       echo "Collaboration mode: default";
@@ -35,6 +36,7 @@ runs:
       echo "Unknown collaboration mode: ${{ inputs.collaboration-mode }}.";
       exit 1;
       fi
+      echo "::endgroup::"
   - name: Create and/or reset cache directory
     if: inputs.collaboration-mode == 'default' || inputs.collaboration-mode == 'prepare'
     shell: bash
@@ -71,9 +73,3 @@ runs:
       eval "find . $CONTENT_ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts/content/
       mkdir -p ~/.artifacts/packages/$PACKAGE_ROOT_FOLDER_NAME/
       cp -r ~/$PACKAGE_ROOT_FOLDER_NAME/* ~/.artifacts/packages/$PACKAGE_ROOT_FOLDER_NAME/
-  - name: Debug
-    shell: bash
-    run: |
-      echo "::group::Artifact content::"
-      find ~/.artifacts
-      echo "::endgroup::"
