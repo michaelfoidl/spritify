@@ -36,7 +36,7 @@ runs:
     with:
       artifact-name: ${{ inputs.artifact-name }}
       is-test-artifact: true
-  - name: Find projects to build
+  - name: Find projects to test
     uses: ./.github/actions/find-projects
     id: find-projects
     with:

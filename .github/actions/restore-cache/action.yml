@@ -1,0 +1,20 @@
+name: restore-cache
+description: 'Restores the files cached under the given artifact name'
+inputs:
+  artifact-key:
+    description: 'Key of the artifact to restore'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+  - name: Initialize cache
+    uses: actions/cache@v2
+    with:
+      key: ${{ inputs.artifact-key }}
+      path: ~/.artifacts
+  - name: Copy files from cache
+    shell: bash
+    run: |
+      cp -r ~/.artifacts/content/* .
+      shopt -s dotglob
+      cp -r ~/.artifacts/packages/* ~

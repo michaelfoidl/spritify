@@ -14,6 +14,10 @@ inputs:
   artifact-name:
     description: 'Name of the build artifact'
     required: true
+  is-collaborative-build:
+    description: 'If set to true, artifacts created during this build are collected, but not yet stored - this has to be done in a manual step afterwards.'
+    required: false
+    default: 'false'
 outputs:
   artifact-key:
     description: 'Key to the build artifact'
@@ -90,10 +94,9 @@ runs:
       echo "::group::Build"
       echo ${{ steps.find-projects.outputs.projects }} | sed "s/\/package.json//" | tr " " "\n" | xargs -I {} npm --prefix {} run build
       echo "::endgroup::"
-  - name: Archive artifacts
-    uses: actions/upload-artifact@v2
+  - name: Cache artifact
+    uses: ./.github/actions/store-cache
     with:
-      name: ${{ steps.artifact-key.outputs.key }}
-      path: |
-        ${{ github.workspace }}/**/dist
-        !${{ github.workspace }}/**/node_modules
+      artifact-key: ${{ steps.artifact-key.outputs.key }}
+      artifact-mode: node
+      collaboration-mode: ${{ inputs.is-collaborative-build == 'true' && 'append' || 'default' }}
