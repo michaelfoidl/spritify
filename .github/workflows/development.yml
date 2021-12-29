@@ -1,7 +1,7 @@
 name: development
 on:
   push:
-    branches: [ build-improvements ]
+    branches: [ development ]
 env:
   dotnet-version: '5.0.x'
   node-version: '14.17.x'
