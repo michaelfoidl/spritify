@@ -76,7 +76,6 @@ runs:
       echo "No Cache found - restoring packages";
       fi
       echo "::endgroup::"
-      rm -rf ~/.nuget/packages/*
   - name: Nuget Restore
     shell: bash
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
