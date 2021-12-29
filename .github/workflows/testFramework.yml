@@ -1,0 +1,34 @@
+name: testFramework
+on:
+  push:
+    branches: [ testFramework ]
+env:
+  dotnet-version: '5.0.x'
+  node-version: '14.17.x'
+jobs:
+  build-common:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.Common
+        id: build
+        uses: ./.github/steps/build-common
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+  build-testFramework:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    needs: build-common
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.TestFramework
+        id: build
+        uses: ./.github/steps/build-testFramework
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          build-common-artifact-key: ${{ needs.build-common.outputs.artifact-key }}
