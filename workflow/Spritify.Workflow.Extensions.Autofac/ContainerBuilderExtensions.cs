@@ -8,7 +8,7 @@ namespace Spritify.Workflow.Extensions.Autofac
             where TWorkflow : WorkflowBase, new()
         {
             var workflow = new TWorkflow();
-            builder.Register(context => workflow.Create(context.Resolve<IWorkflowContextComposerProvider>()));
+            builder.Register(context => workflow.Create(context.Resolve<IWorkflowContextComposerProvider>())).SingleInstance();
         }
     }
 }
