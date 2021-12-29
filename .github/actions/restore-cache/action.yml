@@ -16,12 +16,12 @@ runs:
     shell: bash
     run: |
       echo "::group::Artifact content"
-      find ~/.artifacts
+      ls -al ~/.artifacts
       echo "::endgroup::"
   - name: Copy files from cache
     shell: bash
     run: |
-      cp -r ~/.artifacts/packages/* ~
+      cp -r "~/.artifacts/packages/"* ~
       cp -r ~/.artifacts/content/* .
   - name: Debug
     shell: bash
