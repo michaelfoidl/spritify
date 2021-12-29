@@ -79,6 +79,6 @@ runs:
       echo "::endgroup::"
   - name: Upload cache
     uses: actions/upload-artifact@v2
-      with:
-        name: dummy
-        path: ~/.artifacts
+    with:
+      name: ${{ inputs.artifact-key }}
+      path: ~/.artifacts
