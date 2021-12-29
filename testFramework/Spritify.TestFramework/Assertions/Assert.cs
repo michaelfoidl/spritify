@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Spritify.TestFramework.Assertions.Equality;
 using Spritify.TestFramework.Assertions.Exception;
 using Spritify.TestFramework.Assertions.Inequality;
@@ -29,21 +30,25 @@ namespace Spritify.TestFramework.Assertions
             EqualityAssert.AreNotSame(expected, actual);
         }
 
+        [ContractAnnotation("null => halt")]
         public static void IsNotNull(object actual)
         {
             NullableAssert.IsNotNull(actual);
         }
 
+        [ContractAnnotation("notnull => halt")]
         public static void IsNull(object actual)
         {
             NullableAssert.IsNull(actual);
         }
 
+        [ContractAnnotation("false => halt")]
         public static void IsTrue(bool actual)
         {
             TruthAssert.IsTrue(actual);
         }
 
+        [ContractAnnotation("true => halt")]
         public static void IsFalse(bool actual)
         {
             TruthAssert.IsFalse(actual);
