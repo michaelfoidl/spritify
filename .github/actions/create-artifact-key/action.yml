@@ -38,7 +38,7 @@ runs:
       then
       ARTIFACT_KEY=$(echo ${{ inputs.artifact-name }}-test-${{ github.sha }});
       else
-      echo "The artifact to be named needs to be either a build artifact or a publish artifact." 1>&2;
+      echo "The artifact to be named needs to be either a build artifact, a test artifact or a publish artifact." 1>&2;
       exit 2;
       fi
       echo "built artifact key with value $ARTIFACT_KEY"

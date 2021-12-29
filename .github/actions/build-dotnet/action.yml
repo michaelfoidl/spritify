@@ -18,6 +18,10 @@ inputs:
     description: 'If set to true, only test projects are built. If set to false, all projects except test projects are built. If not set, all projects are built.'
     required: false
     default: ''
+  is-collaborative-build:
+    description: 'If set to true, artifacts created during this build are collected, but not yet stored - this has to be done in a manual step afterwards.'
+    required: false
+    default: 'false'
 outputs:
   artifact-key:
     description: 'Key to the build artifact'
@@ -77,7 +81,7 @@ runs:
     working-directory: ${{ github.workspace }}/${{ steps.normalize-path.outputs.path }}
     run: |
       echo "::group::Nuget Restore"
-      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet restore {} --packages ~/.nuget/packages --no-dependencies
+      echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet restore {} --packages ~/.nuget/packages --no-dependencies --locked-mode /p:DisableImplicitNuGetFallbackFolder=true
       echo "::endgroup::"
   - name: Build
     shell: bash
@@ -86,10 +90,9 @@ runs:
       echo "::group::Build"
       echo ${{ steps.find-projects.outputs.projects }} | tr " " "\n" | xargs -I {} dotnet build {} --configuration Release --verbosity minimal --no-restore --source ~/.nuget/packages
       echo "::endgroup::"
-  - name: Archive artifacts
-    uses: actions/upload-artifact@v2
+  - name: Cache artifact
+    uses: ./.github/actions/store-cache
     with:
-      name: ${{ steps.artifact-key.outputs.key }}
-      path: |
-        ${{ github.workspace }}/**/bin
-        ${{ github.workspace }}/**/obj
+      artifact-key: ${{ steps.artifact-key.outputs.key }}
+      artifact-mode: dotnet
+      collaboration-mode: ${{ inputs.is-collaborative-build == 'true' && 'append' || 'default' }}

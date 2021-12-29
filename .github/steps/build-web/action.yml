@@ -13,25 +13,38 @@ inputs:
 outputs:
   artifact-key:
     description: 'Key to the build artifact'
-    value: ${{ steps.build.outputs.artifact-key }}
+    value: ${{ steps.build-dotnet.outputs.artifact-key }}
 runs:
   using: 'composite'
   steps:
     - name: Restore Spritify.Common
-      uses: actions/download-artifact@v2
+      uses: ./.github/actions/restore-cache
       with:
-        name: ${{ inputs.build-common-artifact-key }}
+        artifact-key: ${{ inputs.build-common-artifact-key }}
+    - name: Prepare artifacts
+      uses: ./.github/actions/store-cache
+      with:
+        collaboration-mode: 'prepare'
     - name: Build Spritify.Web (1/2)
-      id: build
+      id: build-dotnet
       uses: ./.github/actions/build-dotnet
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
         root-directory: ./web
         artifact-name: spritify-web
+        is-collaborative-build: true
     - name: Build Spritify.Web (2/2)
+      id: build-node
       uses: ./.github/actions/build-node
       with:
         node-version: ${{ inputs.node-version }}
         root-directory: ./web
         npm-cache-version: '2'
         artifact-name: spritify-web
+        is-collaborative-build: true
+    - name: Collect artifacts
+      uses: ./.github/actions/store-cache
+      with:
+        artifact-key: ${{ steps.build-dotnet.outputs.artifact-key }}
+        collaboration-mode: 'collect'
+      

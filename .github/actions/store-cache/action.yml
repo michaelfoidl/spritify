@@ -1,0 +1,75 @@
+name: store-cache
+description: 'Caches the given files'
+inputs:
+  artifact-key:
+    description: 'Key of the artifact to store (can be omitted if collaboration-mode is set to "prepare" or "append")'
+    required: false
+    default: ''
+  artifact-mode:
+    description: 'Defines which items to include in the artifact (can be omitted if collaboration-mode is set to "prepare" or "collect") - supported are "dotnet" and "node"'
+    required: false
+    default: ''
+  collaboration-mode:
+    description: 'Defines how to handle multiple artifacts created during the same job - "prepare" prepares the artifact folder, "append" adds the results from this step to any existing artifacts, "collect" takes existing artifacts and bundles them into one result, "default" combines all previous options into a single step'
+    required: false
+    default: 'default'
+runs:
+  using: 'composite'
+  steps:
+  - name: Checking collaboration mode
+    shell: bash
+    run: |
+      echo "::group::Parsing collaboration mode"
+      if [ ${{ inputs.collaboration-mode }} == "default" ];
+      then
+      echo "Collaboration mode: default";
+      elif [ ${{ inputs.collaboration-mode }} == "prepare" ];
+      then
+      echo "Collaboration mode: prepare";
+      elif [ ${{ inputs.collaboration-mode }} == "collect" ];
+      then
+      echo "Collaboration mode: collect";
+      elif [ ${{ inputs.collaboration-mode }} == "append" ];
+      then
+      echo "Collaboration mode: append";
+      else
+      echo "Unknown collaboration mode: ${{ inputs.collaboration-mode }}.";
+      exit 1;
+      fi
+      echo "::endgroup::"
+  - name: Create and/or reset cache directory
+    if: inputs.collaboration-mode == 'default' || inputs.collaboration-mode == 'prepare'
+    shell: bash
+    run: |
+      rm -rf ~/.artifacts/*
+      mkdir -p ~/.artifacts/content
+      mkdir -p ~/.artifacts/packages
+  - name: Initialize cache
+    uses: actions/cache@v2
+    if: inputs.collaboration-mode == 'default' || inputs.collaboration-mode == 'collect'
+    with:
+      key: ${{ inputs.artifact-key }}
+      path: ~/.artifacts
+  - name: Copy files to cache
+    if: inputs.collaboration-mode == 'default' || inputs.collaboration-mode == 'append'
+    shell: bash
+    run: |
+      echo "::group::Look for artifact items"
+      if [ ${{ inputs.artifact-mode }} == "dotnet" ];
+      then
+      echo "Artifact mode: dotnet";
+      CONTENT_ARGS="-regex \".*/\(bin\|obj\)$\"";
+      PACKAGE_ROOT_FOLDER_NAME=".nuget";
+      elif [ ${{ inputs.artifact-mode }} == "node" ];
+      then
+      echo "Artifact mode: node";
+      CONTENT_ARGS="! -regex \".*/node_modules/.*\" -regex \".*/\dist$\"";
+      PACKAGE_ROOT_FOLDER_NAME=".npm";
+      else
+      echo "Unknown artifact mode: ${{ inputs.artifact-mode }}.";
+      exit 1;
+      fi
+      echo "::endgroup::"
+      eval "find . $CONTENT_ARGS" | xargs -I {} cp -r --parents {}  ~/.artifacts/content/
+      mkdir -p ~/.artifacts/packages/$PACKAGE_ROOT_FOLDER_NAME/
+      cp -r ~/$PACKAGE_ROOT_FOLDER_NAME/* ~/.artifacts/packages/$PACKAGE_ROOT_FOLDER_NAME/

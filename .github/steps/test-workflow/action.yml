@@ -15,9 +15,9 @@ runs:
   using: 'composite'
   steps:
     - name: Restore Spritify.Workflow.Test
-      uses: actions/download-artifact@v2
+      uses: ./.github/actions/restore-cache
       with:
-        name: ${{ inputs.build-workflow-test-artifact-key }}
+        artifact-key: ${{ inputs.build-workflow-test-artifact-key }}
     - name: UnitTest Spritify.Workflow
       id: test
       uses: ./.github/actions/test-dotnet

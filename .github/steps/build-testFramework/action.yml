@@ -15,9 +15,9 @@ runs:
   using: 'composite'
   steps:
     - name: Restore Spritify.Common
-      uses: actions/download-artifact@v2
+      uses: ./.github/actions/restore-cache
       with:
-        name: ${{ inputs.build-common-artifact-key }}
+        artifact-key: ${{ inputs.build-common-artifact-key }}
     - name: Build Spritify.TestFramework
       id: build
       uses: ./.github/actions/build-dotnet
