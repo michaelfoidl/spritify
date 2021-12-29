@@ -1,0 +1,143 @@
+name: development-pull
+on:
+  pull_request:
+    branches: [ development ]
+env:
+  dotnet-version: '5.0.x'
+  node-version: '14.17.x'
+jobs:
+  build-common:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.Common
+        id: build
+        uses: ./.github/steps/build-common
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+  build-testFramework:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    needs: build-common
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.TestFramework
+        id: build
+        uses: ./.github/steps/build-testFramework
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          build-common-artifact-key: ${{ needs.build-common.outputs.artifact-key }}
+  build-workflow:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    needs: build-common
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.Workflow
+        id: build
+        uses: ./.github/steps/build-workflow
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          build-common-artifact-key: ${{ needs.build-common.outputs.artifact-key }}
+  build-api:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    needs: build-common
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.Api
+        id: build
+        uses: ./.github/steps/build-api
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          build-common-artifact-key: ${{ needs.build-common.outputs.artifact-key }}
+  build-web:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    needs: build-common
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.Web
+        id: build
+        uses: ./.github/steps/build-web
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          node-version: ${{ env.node-version }}
+          build-common-artifact-key: ${{ needs.build-common.outputs.artifact-key }}
+  build-workflow-test:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.build.outputs.artifact-key }}
+    needs: [ build-testFramework, build-workflow ]
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Build Spritify.Workflow.Test
+        id: build
+        uses: ./.github/steps/build-workflow-test
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          build-testFramework-artifact-key: ${{ needs.build-testFramework.outputs.artifact-key }}
+          build-workflow-artifact-key: ${{ needs.build-workflow.outputs.artifact-key }}
+  test-workflow:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.test.outputs.artifact-key }}
+    needs: build-workflow-test
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: UnitTest Spritify.Workflow
+        id: test
+        uses: ./.github/steps/test-workflow
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+          build-workflow-test-artifact-key: ${{ needs.build-workflow-test.outputs.artifact-key }}
+  publish-api:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.publish.outputs.artifact-key }}
+    needs: build-api
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Publish Spritify.Api
+        id: publish
+        uses: ./.github/steps/publish-api
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+  publish-web:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact-key: ${{ steps.publish.outputs.artifact-key }}
+    needs: build-web
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Publish Spritify.Web
+        id: publish
+        uses: ./.github/steps/publish-web
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+  publish-testResults:
+    runs-on: ubuntu-latest
+    needs: test-workflow
+    if: always()
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v2
+      - name: Restore Spritify.Workflow.Test results
+        uses: ./.github/steps/publish-testResults
+        with:
+          test-workflow-artifact-key: ${{ needs.test-workflow.outputs.artifact-key }}
