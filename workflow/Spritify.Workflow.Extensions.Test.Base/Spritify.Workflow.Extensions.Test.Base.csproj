@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\testFramework\Spritify.TestFramework.Extensions.Mocking\Spritify.TestFramework.Extensions.Mocking.csproj" />
+    <ProjectReference Include="..\..\testFramework\Spritify.TestFramework\Spritify.TestFramework.csproj" />
+    <ProjectReference Include="..\Spritify.Workflow\Spritify.Workflow.csproj" />
+  </ItemGroup>
+
+</Project>
