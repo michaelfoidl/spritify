@@ -2,7 +2,11 @@ name: development
 on:
   push:
     branches: [ development ]
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      git-ref:
+            description: Git Ref (latest version by default)    
+            required: false
 env:
   dotnet-version: '5.0.x'
   node-version: '14.17.x'
@@ -14,6 +18,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Common
         id: build
         uses: ./.github/steps/build-common
@@ -27,6 +37,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: Build Spritify.TestFramework
         id: build
         uses: ./.github/steps/build-testFramework
@@ -41,6 +57,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Workflow
         id: build
         uses: ./.github/steps/build-workflow
@@ -55,6 +77,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Api
         id: build
         uses: ./.github/steps/build-api
@@ -69,6 +97,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Web
         id: build
         uses: ./.github/steps/build-web
@@ -84,6 +118,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Workflow.Test
         id: build
         uses: ./.github/steps/build-workflow-test
@@ -99,6 +139,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: UnitTest Spritify.Workflow
         id: test
         uses: ./.github/steps/test-workflow
@@ -113,6 +159,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: Publish Spritify.Api
         id: publish
         uses: ./.github/steps/publish-api
@@ -126,6 +178,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: Publish Spritify.Web
         id: publish
         uses: ./.github/steps/publish-web
@@ -138,6 +196,12 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
+        if: ${{ inputs.git-ref == "" }}
+      - name: Checkout specified version
+        uses: actions/checkout@v2
+        if: ${{ inputs.git-ref != "" }}
+        with:
+          ref: ${{ inputs.git-ref }}
       - name: Restore Spritify.Workflow.Test results
         uses: ./.github/steps/publish-testResults
         with:
