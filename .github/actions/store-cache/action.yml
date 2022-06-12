@@ -64,7 +64,7 @@ runs:
       then
       echo "Artifact mode: node";
       CONTENT_ARGS="! -regex \".*/node_modules/.*\" -regex \".*/\dist$\"";
-      PACKAGE_ROOT_FOLDER_NAME=".npm";
+      PACKAGE_ROOT_FOLDER_NAME=".npm/packages";
       else
       echo "Unknown artifact mode: ${{ inputs.artifact-mode }}.";
       exit 1;
