@@ -2,8 +2,7 @@ name: development
 on:
   push:
     branches: [ development ]
-  workflow_dispatch:
-    branches: [ development ]
+  workflow_dispatch
 env:
   dotnet-version: '5.0.x'
   node-version: '14.17.x'
