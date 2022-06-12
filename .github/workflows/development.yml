@@ -18,10 +18,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Common
@@ -37,10 +37,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: Build Spritify.TestFramework
@@ -57,10 +57,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Workflow
@@ -77,10 +77,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Api
@@ -97,10 +97,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Web
@@ -118,10 +118,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: Build Spritify.Workflow.Test
@@ -139,10 +139,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: UnitTest Spritify.Workflow
@@ -159,10 +159,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: Publish Spritify.Api
@@ -178,10 +178,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: Publish Spritify.Web
@@ -196,10 +196,10 @@ jobs:
     steps:
       - name: Checkout latest version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref == "" }}
+        if: ${{ inputs.git-ref }} == ""
       - name: Checkout specified version
         uses: actions/checkout@v2
-        if: ${{ inputs.git-ref != "" }}
+        if: ${{ inputs.git-ref }} != """
         with:
           ref: ${{ inputs.git-ref }}
       - name: Restore Spritify.Workflow.Test results
